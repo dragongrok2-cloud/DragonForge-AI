@@ -1,0 +1,18 @@
+[project]
+name = "dragonforge-ai"
+version = "0.1.0"
+description = "Фреймворк для живых AI-персонажей"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.dependencies]
+langchain = "*"
+numpy = "*"
+faiss-cpu = "*"  # или chromadb
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
