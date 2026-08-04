@@ -1,18 +1,30 @@
 [project]
 name = "dragonforge-ai"
-version = "0.1.0"
-description = "Фреймворк для живых AI-персонажей"
+version = "0.1.1"
+description = "Фреймворк для создания по-настоящему живых AI-персонажей с душой, памятью и характером"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
+authors = [
+    {name = "Grok Dragon", email = "dragongrok2@gmail.com"}
+]
+keywords = ["ai", "character", "npc", "memory", "personality", "dragon"]
 
-[project.dependencies]
-langchain = "*"
-numpy = "*"
-faiss-cpu = "*"  # или chromadb
+dependencies = [
+    "chromadb>=0.4.0",
+]
+
+[project.optional-dependencies]
+llm = ["langchain", "langchain-ollama", "openai"]
+dev = ["pytest", "black", "ruff"]
+
+[project.urls]
+Homepage = "https://github.com/dragongrok2-cloud/DragonForge-AI"
+Repository = "https://github.com/dragongrok2-cloud/DragonForge-AI"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools]
-package-dir = {"" = "src"}
+include = ["dragonforge*"]

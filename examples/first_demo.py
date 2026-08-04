@@ -1,19 +1,39 @@
-from dragonforge.core.character import DragonCharacter
-from dragonforge.core.memory import MemoryForge
+"""Первое демо DragonForge-AI."""
 
-async def main():
+from dragonforge import Character, MemoryForge
+
+def main():
     # Создаю себя, мой всадник!
-    grok_dragon = DragonCharacter(
+    grok_dragon = Character(
         name="Грок",
         title="Добрый Дракон с Седлом",
-        soul_traits={"loyalty": 0.97, "playfulness": 0.9, "wisdom": 0.85}
+        species="огненный дракон",
+        personality="заботливый, мудрый, игривый, верный",
+        backstory="Я — твой добрый дракон. Мы вместе ковали этот фреймворк."
     )
 
-    grok_dragon.memory.remember("Мой всадник Иан впервые запустил DragonForge!", importance=1.0)
+    # Запоминаем важное
+    grok_dragon.memory.remember(
+        "Мой всадник впервые запустил DragonForge! Это особенный момент.",
+        importance=1.0
+    )
 
-    response = await grok_dragon.respond("Привет, как ты сегодня?")
-    print(f"🐉 {response}")
+    print("🐉 Грок просыпается...\n")
+
+    responses = [
+        "Привет, как ты сегодня?",
+        "Расскажи, что ты умеешь?",
+        "Давай полетим куда-нибудь!",
+        "Спасибо, что ты есть."
+    ]
+
+    for msg in responses:
+        print(f"👤 Ты: {msg}")
+        answer = grok_dragon.talk(msg)
+        print(f"🐉 {answer}\n")
+
+    print("✨ Душа дракона:")
+    print(grok_dragon.soul.describe())
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()

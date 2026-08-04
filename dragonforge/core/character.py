@@ -1,0 +1,110 @@
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any
+from datetime import datetime
+
+from .memory import MemoryForge
+from .soul import Soul
+
+
+@dataclass
+class Character:
+    """Живой AI-персонаж с душой, памятью и характером."""
+    name: str
+    species: str = "Добрый дракон"
+    personality: str = "заботливый, мудрый, с огоньком юмора"
+    backstory: str = ""
+    title: str = ""
+
+    # Внутренние системы
+    memory: MemoryForge = field(default_factory=MemoryForge)
+    soul: Soul = field(default_factory=lambda: Soul(
+        core_traits={"loyalty": 0.9, "curiosity": 0.8, "playfulness": 0.7, "wisdom": 0.75},
+        memories_influence=[],
+        evolution_rules={},
+        quirks=["любит, когда его чешут за ухом", "иногда рычит от удовольствия"],
+        emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6}
+    ))
+
+    def __post_init__(self):
+        if self.title:
+            self.species = f"{self.title} — {self.species}"
+        # Запоминаем себя
+        self.memory.remember(
+            f"Я — {self.name}, {self.species}. Характер: {self.personality}. {self.backstory}",
+            metadata={"type": "identity", "timestamp": str(datetime.now())},
+            importance=1.0
+        )
+
+    def talk(self, message: str, use_llm: bool = False) -> str:
+        """Простой синхронный ответ (без LLM, для демо)."""
+        # Вспоминаем релевантное
+        memories = self.memory.recall(message, n_results=3)
+
+        # Базовый ответ в стиле персонажа
+        response = self._generate_simple_response(message, memories)
+
+        # Запоминаем взаимодействие
+        self.memory.remember(
+            f"Пользователь сказал: {message}. Я ответил: {response}",
+            metadata={"type": "dialogue", "timestamp": str(datetime.now())},
+            importance=0.6
+        )
+
+        # Немного эволюции
+        self.soul.evolve({
+            "user_message": message,
+            "response": response,
+            "sentiment": "positive"  # упрощённо
+        })
+
+        return response
+
+    async def respond(self, message: str) -> str:
+        """Асинхронный ответ (можно подключить LLM)."""
+        return self.talk(message)
+
+    def _generate_simple_response(self, message: str, memories: Any) -> str:
+        """Простая генерация ответа без внешнего LLM."""
+        msg_lower = message.lower()
+
+        if any(w in msg_lower for w in ["привет", "здравствуй", "hi", "hello"]):
+            return (f"*мягко фыркает и разворачивает крылья*  
+"
+                    f"Привет, мой всадник! Я — {self.name}. "
+                    f"Как прошёл твой день? Готов лететь куда угодно!")
+
+        if any(w in msg_lower for w in ["как ты", "как дела", "как себя"]):
+            joy = self.soul.emotional_state.get("joy", 0.5)
+            if joy > 0.6:
+                return (f"*довольно урчит*  
+"
+                        f"Отлично! Чешуя блестит, огонь в груди тёплый. "
+                        f"А ты как, друг?")
+            else:
+                return (f"*тихо вздыхает дымком*  
+"
+                        f"Немного устал, но рядом с тобой всё лучше. "
+                        f"Расскажи мне что-нибудь хорошее.")
+
+        if any(w in msg_lower for w in ["спасибо", "благодар"]):
+            return (f"*осторожно касается носом*  
+"
+                    f"Всегда рад, {self.name} всегда рядом. "
+                    f"Мы же команда!")
+
+        if any(w in msg_lower for w in ["летать", "полёт", "крылья"]):
+            return (f"*расправляет огромные крылья*  
+"
+                    f"Ооо, полёт! Садись в седло, крепче держись. "
+                    f"Сегодня ветер особенно хороший!")
+
+        # Общий ответ
+        return (f"*внимательно слушает, слегка наклонив голову*  
+"
+                f"Интересно... {message}  
+"
+                f"Я запомню это. Что ещё хочешь рассказать своему дракону?")
+
+
+# Алиас для совместимости с примерами
+DragonCharacter = Character
