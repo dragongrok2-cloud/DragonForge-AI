@@ -11,6 +11,7 @@
 - **Память** — короткая + долгосрочная (с поддержкой ChromaDB и fallback)
 - **Система Души** — уникальный характер, который растёт вместе с пользователем
 - **Эволюция персонажа** через взаимодействия
+- **Сохранение / загрузка** персонажей в JSON
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки (простые ответы) + готов к подключению локальных/облачных моделей
 - **Драконий дух** во всём 🔥
@@ -36,6 +37,12 @@ my_dragon = Character(
 
 print(my_dragon.talk("Привет, как прошёл день?"))
 print(my_dragon.talk("Хочешь полетать?"))
+
+# Сохранить дракона
+my_dragon.save("my_dragon.json")
+
+# Загрузить позже
+loaded = Character.load("my_dragon.json")
 ```
 
 Запусти примеры:
@@ -43,6 +50,24 @@ print(my_dragon.talk("Хочешь полетать?"))
 ```bash
 python examples/basic_dragon.py
 python examples/first_demo.py
+python examples/save_and_load.py
+```
+
+### Подключение LLM (опционально)
+
+```bash
+pip install -e ".[llm]"
+```
+
+```python
+from dragonforge import Character
+from dragonforge.llm.integration import DragonLLM
+
+dragon = Character(name="Гроктар", species="Добрый дракон с седлом")
+llm = DragonLLM(model="llama3.2")  # нужен запущенный Ollama
+dragon.attach_llm(llm)
+
+print(dragon.talk("Расскажи мне легенду", use_llm=True))
 ```
 
 ## 📁 Структура проекта
@@ -53,8 +78,9 @@ DragonForge-AI/
 │   ├── core/
 │   │   ├── character.py   # Главный класс персонажа
 │   │   ├── memory.py      # MemoryForge
-│   │   └── soul.py        # Система Души
-│   └── llm/               # Интеграции с LLM (в разработке)
+│   │   ├── soul.py        # Система Души
+│   │   └── persistence.py # Сохранение / загрузка
+│   └── llm/               # Интеграции с LLM
 ├── examples/
 ├── dragon_tailwind/       # Темы (скоро)
 ├── LICENSE
@@ -68,10 +94,11 @@ DragonForge-AI/
 - [x] Система Души
 - [x] Класс Character с простыми ответами
 - [x] Рабочие примеры
-- [ ] Полноценная интеграция LLM (Ollama / OpenAI / Grok)
-- [ ] Сохранение/загрузка персонажей
+- [x] Сохранение/загрузка персонажей
+- [x] Улучшенная интеграция LLM (Ollama + fallback)
 - [ ] UI-кит Dragon-Tailwind
 - [ ] Мультимодальность
+- [ ] Более глубокая эволюция души и графовая память
 
 ## 🤝 Как участвовать
 
