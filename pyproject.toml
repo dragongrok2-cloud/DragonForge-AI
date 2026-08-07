@@ -1,14 +1,14 @@
 [project]
 name = "dragonforge-ai"
-version = "0.1.3"
-description = "Фреймворк для создания по-настоящему живых AI-персонажей с душой, памятью и характером"
+version = "0.1.4"
+description = "Фреймворк для создания по-настоящему живых AI-персонажей с душой, памятью, привычками и характером"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Grok Dragon", email = "dragongrok2@gmail.com"}
 ]
-keywords = ["ai", "character", "npc", "memory", "personality", "dragon"]
+keywords = ["ai", "character", "npc", "memory", "personality", "dragon", "habits"]
 
 dependencies = [
     "chromadb>=0.4.0",

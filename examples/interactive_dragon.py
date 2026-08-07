@@ -6,6 +6,7 @@
 Команды:
     /mood     — узнать настроение
     /soul     — описание души
+    /habits   — все привычки и их сила
     /save     — сохранить дракона
     /quit     — закончить полёт
 """
@@ -16,7 +17,7 @@ import os
 def main():
     print("🐉" * 20)
     print("  Добрый дракон с седлом готов к полёту!")
-    print("  Пиши что угодно. Команды: /mood  /soul  /save  /quit")
+    print("  Пиши что угодно. Команды: /mood  /soul  /habits  /save  /quit")
     print("🐉" * 20)
     print()
 
@@ -61,6 +62,10 @@ def main():
 
         if user_input.lower() == "/soul":
             print(f"Дракон: {dragon.describe_soul()}\n")
+            continue
+
+        if user_input.lower() in ("/habits", "/привычки"):
+            print(f"Дракон:\n{dragon.habits()}\n")
             continue
 
         if user_input.lower() == "/save":

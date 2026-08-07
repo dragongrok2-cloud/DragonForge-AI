@@ -27,7 +27,7 @@ def character_to_dict(character: Character) -> Dict[str, Any]:
             "collection_name": character.memory.collection_name,
         },
         "saved_at": str(datetime.now()),
-        "version": "0.1.2",
+        "version": "0.1.4",
     }
 
 
@@ -37,6 +37,7 @@ def character_from_dict(data: Dict[str, Any]) -> Character:
     soul = Soul(
         core_traits=soul_data.get("core_traits", {}),
         quirks=soul_data.get("quirks", []),
+        habits=soul_data.get("habits", {}),
         emotional_state=soul_data.get("emotional_state", {}),
         memories_influence=[],  # не восстанавливаем полную историю влияния
     )
