@@ -15,6 +15,8 @@
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки (простые ответы) + готов к подключению локальных/облачных моделей
 - **Метод `mood()`** — узнать текущее настроение дракона
+- **Метод `describe_soul()`** — заглянуть в душу
+- **Интерактивный режим** — болтай с драконом в терминале сколько угодно
 - **Драконий дух** во всём 🔥
 
 ## 🚀 Быстрый старт
@@ -38,7 +40,8 @@ my_dragon = Character(
 
 print(my_dragon.talk("Привет, как прошёл день?"))
 print(my_dragon.talk("Хочешь полетать?"))
-print(my_dragon.mood())  # новое!
+print(my_dragon.mood())
+print(my_dragon.describe_soul())
 
 # Сохранить дракона
 my_dragon.save("my_dragon.json")
@@ -53,7 +56,8 @@ loaded = Character.load("my_dragon.json")
 python examples/basic_dragon.py
 python examples/first_demo.py
 python examples/save_and_load.py
-python examples/dragon_with_saddle.py   # ← новый пример!
+python examples/dragon_with_saddle.py
+python examples/interactive_dragon.py   # ← новый! интерактивный чат
 ```
 
 ### Подключение LLM (опционально)
@@ -79,14 +83,15 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 DragonForge-AI/
 ├── dragonforge/
 │   ├── core/
-│   │   ├── character.py   # Главный класс персонажа (+ mood())
+│   │   ├── character.py   # Главный класс персонажа (+ mood(), describe_soul())
 │   │   ├── memory.py      # MemoryForge
 │   │   ├── soul.py        # Система Души
 │   │   └── persistence.py # Сохранение / загрузка
 │   └── llm/               # Интеграции с LLM
 ├── examples/
 │   ├── basic_dragon.py
-│   ├── dragon_with_saddle.py  # новый!
+│   ├── dragon_with_saddle.py
+│   ├── interactive_dragon.py  # новый!
 │   └── ...
 ├── dragon_tailwind/       # Темы (скоро)
 ├── LICENSE
@@ -103,6 +108,7 @@ DragonForge-AI/
 - [x] Сохранение/загрузка персонажей
 - [x] Улучшенная интеграция LLM (Ollama + fallback)
 - [x] Метод mood() и больше драконьих ответов
+- [x] Интерактивный режим общения
 - [ ] UI-кит Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Более глубокая эволюция души и графовая память
