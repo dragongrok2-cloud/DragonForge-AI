@@ -16,7 +16,7 @@
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
 - **Методы** `mood()`, `describe_soul()`, `habits()`
-- **Интерактивный режим** — болтай с драконом в терминале
+- **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Драконий дух** во всём 🔥
 
 ## 🚀 Быстрый старт
@@ -52,9 +52,10 @@ loaded = Character.load("my_dragon.json")
 ```bash
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
-python examples/saddle_flight_adventure.py   # ← новое! приключение «Полёт в седле»
-python examples/habits_demo.py               # демо привычек
-python examples/interactive_dragon.py        # интерактивный чат (/habits)
+python examples/saddle_flight_adventure.py      # линейное приключение
+python examples/saddle_choice_adventure.py      # ← НОВОЕ! режим с выбором действий
+python examples/habits_demo.py                  # демо привычек
+python examples/interactive_dragon.py           # свободный чат (/habits /mood /soul)
 ```
 
 ### Подключение LLM (опционально)
@@ -94,6 +95,24 @@ dragon.soul.add_habit("всегда ждёт у окна", 0.4)
 print(dragon.habits())
 ```
 
+## 🎮 Интерактивный режим с выбором действий
+
+Самый живой способ поиграть с драконом:
+
+```bash
+python examples/saddle_choice_adventure.py
+```
+
+Ты сам выбираешь действия из меню:
+- Сесть в седло и взлететь
+- Почесать за ухом
+- Полететь выше / ниже
+- Попросить согреть крылом
+- Подарить камушек
+- и многое другое
+
+Привычки растут, настроение меняется, можно сохранять прогресс. Есть разные локации (земля → воздух → облака) и случайные события.
+
 ## 📁 Структура проекта
 
 ```
@@ -106,10 +125,10 @@ DragonForge-AI/
 │   │   └── persistence.py # Сохранение / загрузка
 │   └── llm/
 ├── examples/
-│   ├── interactive_dragon.py
+│   ├── interactive_dragon.py          # свободный чат
+│   ├── saddle_choice_adventure.py     # режим с выбором действий ⭐
+│   ├── saddle_flight_adventure.py
 │   ├── habits_demo.py
-│   ├── dragon_with_saddle.py
-│   ├── saddle_flight_adventure.py  # новое приключение
 │   └── ...
 ├── LICENSE
 └── README.md
@@ -128,6 +147,7 @@ DragonForge-AI/
 - [x] Метод mood() и больше драконьих ответов
 - [x] Интерактивный режим общения
 - [x] Пример «Полёт в седле»
+- [x] Интерактивный режим с выбором действий
 - [ ] UI-кит Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Более глубокая эволюция души и графовая память
