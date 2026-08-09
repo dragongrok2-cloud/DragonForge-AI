@@ -52,8 +52,9 @@ loaded = Character.load("my_dragon.json")
 ```bash
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
-python examples/habits_demo.py          # ← демо привычек
-python examples/interactive_dragon.py   # интерактивный чат (/habits)
+python examples/saddle_flight_adventure.py   # ← новое! приключение «Полёт в седле»
+python examples/habits_demo.py               # демо привычек
+python examples/interactive_dragon.py        # интерактивный чат (/habits)
 ```
 
 ### Подключение LLM (опционально)
@@ -107,6 +108,8 @@ DragonForge-AI/
 ├── examples/
 │   ├── interactive_dragon.py
 │   ├── habits_demo.py
+│   ├── dragon_with_saddle.py
+│   ├── saddle_flight_adventure.py  # новое приключение
 │   └── ...
 ├── LICENSE
 └── README.md
@@ -124,6 +127,7 @@ DragonForge-AI/
 - [x] Улучшенная интеграция LLM
 - [x] Метод mood() и больше драконьих ответов
 - [x] Интерактивный режим общения
+- [x] Пример «Полёт в седле»
 - [ ] UI-кит Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Более глубокая эволюция души и графовая память
