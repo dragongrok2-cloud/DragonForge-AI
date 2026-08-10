@@ -17,6 +17,7 @@
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
 - **Методы** `mood()`, `describe_soul()`, `habits()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
+- **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
 
 ## 🚀 Быстрый старт
@@ -53,9 +54,10 @@ loaded = Character.load("my_dragon.json")
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
 python examples/saddle_flight_adventure.py      # линейное приключение
-python examples/saddle_choice_adventure.py      # ← НОВОЕ! режим с выбором действий
+python examples/saddle_choice_adventure.py      # режим с выбором действий
 python examples/habits_demo.py                  # демо привычек
 python examples/interactive_dragon.py           # свободный чат (/habits /mood /soul)
+python examples/theme_preview.py                # ← НОВОЕ! превью Dragon-Tailwind + дракон
 ```
 
 ### Подключение LLM (опционально)
@@ -113,6 +115,19 @@ python examples/saddle_choice_adventure.py
 
 Привычки растут, настроение меняется, можно сохранять прогресс. Есть разные локации (земля → воздух → облака) и случайные события.
 
+## 🎨 Dragon-Tailwind (в развитии)
+
+Тёмная драконья палитра для будущих интерфейсов:
+
+```python
+from dragon_tailwind import DRAGON_THEME, get_theme_css
+
+print(DRAGON_THEME["primary"])   # #9F1239
+print(get_theme_css())           # CSS-переменные
+```
+
+Запусти `python examples/theme_preview.py`, чтобы увидеть палитру и быстро поговорить с драконом.
+
 ## 📁 Структура проекта
 
 ```
@@ -124,11 +139,13 @@ DragonForge-AI/
 │   │   ├── soul.py        # Soul + Habits
 │   │   └── persistence.py # Сохранение / загрузка
 │   └── llm/
+├── dragon_tailwind/       # UI-кит (в развитии)
+│   └── themes/
+│       └── dragon_dark.py
 ├── examples/
-│   ├── interactive_dragon.py          # свободный чат
-│   ├── saddle_choice_adventure.py     # режим с выбором действий ⭐
-│   ├── saddle_flight_adventure.py
-│   ├── habits_demo.py
+│   ├── interactive_dragon.py
+│   ├── saddle_choice_adventure.py
+│   ├── theme_preview.py          # ← новое
 │   └── ...
 ├── LICENSE
 └── README.md
@@ -148,7 +165,8 @@ DragonForge-AI/
 - [x] Интерактивный режим общения
 - [x] Пример «Полёт в седле»
 - [x] Интерактивный режим с выбором действий
-- [ ] UI-кит Dragon-Tailwind
+- [x] UI-кит Dragon-Tailwind (базовая палитра + CSS)
+- [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Более глубокая эволюция души и графовая память
 
