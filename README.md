@@ -53,11 +53,12 @@ loaded = Character.load("my_dragon.json")
 ```bash
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
+python examples/morning_with_dragon.py          # ← НОВОЕ! утро с драконом
 python examples/saddle_flight_adventure.py      # линейное приключение
 python examples/saddle_choice_adventure.py      # режим с выбором действий
 python examples/habits_demo.py                  # демо привычек
 python examples/interactive_dragon.py           # свободный чат (/habits /mood /soul)
-python examples/theme_preview.py                # ← НОВОЕ! превью Dragon-Tailwind + дракон
+python examples/theme_preview.py                # превью Dragon-Tailwind + дракон
 ```
 
 ### Подключение LLM (опционально)
@@ -145,7 +146,8 @@ DragonForge-AI/
 ├── examples/
 │   ├── interactive_dragon.py
 │   ├── saddle_choice_adventure.py
-│   ├── theme_preview.py          # ← новое
+│   ├── morning_with_dragon.py    # ← новое
+│   ├── theme_preview.py
 │   └── ...
 ├── LICENSE
 └── README.md
