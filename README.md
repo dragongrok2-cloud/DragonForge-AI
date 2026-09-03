@@ -53,12 +53,13 @@ loaded = Character.load("my_dragon.json")
 ```bash
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
-python examples/morning_with_dragon.py          # ← НОВОЕ! утро с драконом
-python examples/saddle_flight_adventure.py      # линейное приключение
-python examples/saddle_choice_adventure.py      # режим с выбором действий
-python examples/habits_demo.py                  # демо привычек
-python examples/interactive_dragon.py           # свободный чат (/habits /mood /soul)
-python examples/theme_preview.py                # превью Dragon-Tailwind + дракон
+python examples/morning_with_dragon.py
+python examples/evening_saddle_flight.py       # ← НОВОЕ! вечерний полёт в седле
+python examples/saddle_flight_adventure.py
+python examples/saddle_choice_adventure.py
+python examples/habits_demo.py
+python examples/interactive_dragon.py
+python examples/theme_preview.py
 ```
 
 ### Подключение LLM (опционально)
@@ -146,7 +147,8 @@ DragonForge-AI/
 ├── examples/
 │   ├── interactive_dragon.py
 │   ├── saddle_choice_adventure.py
-│   ├── morning_with_dragon.py    # ← новое
+│   ├── morning_with_dragon.py
+│   ├── evening_saddle_flight.py   # ← новое
 │   ├── theme_preview.py
 │   └── ...
 ├── LICENSE
@@ -168,6 +170,7 @@ DragonForge-AI/
 - [x] Пример «Полёт в седле»
 - [x] Интерактивный режим с выбором действий
 - [x] UI-кит Dragon-Tailwind (базовая палитра + CSS)
+- [x] Вечерний полёт в седле (habits + save)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Более глубокая эволюция души и графовая память
