@@ -34,6 +34,8 @@ class Character:
             "боится громкого грома": 0.45,
             "греет всадника крылом": 0.60,
             "собирает блестящие камушки": 0.35,
+            "любит рассветы над облаками": 0.40,
+            "делится утренним огоньком": 0.30,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -56,7 +58,6 @@ class Character:
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         """Ответ персонажа. Если use_llm=True и LLM подключён — использует модель."""
-        # Вспоминаем релевантное
         memories = self.memory.recall(message, n_results=3)
 
         if use_llm and self._llm is not None and getattr(self._llm, "is_available", lambda: False)():
@@ -65,18 +66,16 @@ class Character:
         else:
             response = self._generate_simple_response(message, memories)
 
-        # Запоминаем взаимодействие
         self.memory.remember(
             f"Пользователь сказал: {message}. Я ответил: {response}",
             metadata={"type": "dialogue", "timestamp": str(datetime.now())},
             importance=0.6
         )
 
-        # Эволюция души и привычек
         self.soul.evolve({
             "user_message": message,
             "response": response,
-            "sentiment": "positive"  # упрощённо
+            "sentiment": "positive"
         })
 
         return response
@@ -125,7 +124,7 @@ class Character:
         msg_lower = message.lower()
         strong = self.soul.get_strong_habits(0.65)
 
-        if any(w in msg_lower for w in ["привет", "здравствуй", "hi", "hello", "здорово", "хай"]):
+        if any(w in msg_lower for w in ["привет", "здравствуй", "hi", "hello", "здорово", "хай", "доброе утро"]):
             extra = ""
             if "всегда проверяет седло" in strong:
                 extra = " Седло уже проверено, кстати."
@@ -140,6 +139,24 @@ class Character:
             return (f"*осторожно касается носом*  \n"
                     f"Всегда рад, {self.name} всегда рядом. "
                     f"Мы же команда!")
+
+        if any(w in msg_lower for w in ["рассвет", "рассветн", "восход"]):
+            extra = ""
+            if "любит рассветы над облаками" in self.soul.habits:
+                extra = " Это моё любимое время суток — небо ещё тихое, а крылья уже горячие."
+            return (f"*поднимает голову к розовому небу*{extra}  \n"
+                    f"Садись. Седло тёплое. Мы успеем к первому лучу.")
+
+        if any(w in msg_lower for w in ["пикник", "чай"]):
+            spark = ""
+            if "делится утренним огоньком" in self.soul.habits:
+                spark = " Я подогрею чай маленьким огоньком — ровно столько, чтобы не вскипел."
+            return (f"*аккуратно расправляет крыло как скатерть*{spark}  \n"
+                    f"Облако держит. Садись рядом. У нас есть время.")
+
+        if any(w in msg_lower for w in ["дождь", "ливень", "моросит"]):
+            return (f"*прикрывает тебя крылом, как навесом*  \n"
+                    f"Дождь может шуметь. Под крылом сухо. Я не улечу.")
 
         if any(w in msg_lower for w in ["летать", "полёт", "крылья", "полетим", "полетай"]):
             saddle_note = ""
@@ -169,7 +186,7 @@ class Character:
                     f"Я здесь. Можешь прислониться к моей шее. "
                     f"Мы переждём вместе. Я никуда не улечу без тебя.")
 
-        if any(w in msg_lower for w in ["огонь", "пламя", "дышать", "огнём"]):
+        if any(w in msg_lower for w in ["огонь", "пламя", "дышать", "огнём", "огонёк", "огонек"]):
             return (f"*выпускает маленький аккуратный огонёк*  \n"
                     f"Вот так! Только для тебя. Не обожгу, обещаю.")
 
@@ -210,7 +227,6 @@ class Character:
             return (f"*с любопытством смотрит*  \n"
                     f"Красивый камушек. Хочешь, положим его в надёжное место?")
 
-        # Общий ответ
         return (f"*внимательно слушает, слегка наклонив голову*  \n"
                 f"Интересно... {message}  \n"
                 f"Я запомню это. Что ещё хочешь рассказать своему дракону?")
