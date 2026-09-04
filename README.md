@@ -54,7 +54,8 @@ loaded = Character.load("my_dragon.json")
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
 python examples/morning_with_dragon.py
-python examples/evening_saddle_flight.py       # ← НОВОЕ! вечерний полёт в седле
+python examples/evening_saddle_flight.py
+python examples/dawn_saddle_picnic.py          # ← НОВОЕ! рассветный пикник в седле
 python examples/saddle_flight_adventure.py
 python examples/saddle_choice_adventure.py
 python examples/habits_demo.py
@@ -90,6 +91,8 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - боится громкого грома
 - греет всадника крылом
 - собирает блестящие камушки
+- любит рассветы над облаками
+- делится утренним огоньком
 
 Сильные привычки влияют на ответы дракона (он начинает упоминать их чаще и ярче).
 
@@ -148,7 +151,8 @@ DragonForge-AI/
 │   ├── interactive_dragon.py
 │   ├── saddle_choice_adventure.py
 │   ├── morning_with_dragon.py
-│   ├── evening_saddle_flight.py   # ← новое
+│   ├── evening_saddle_flight.py
+│   ├── dawn_saddle_picnic.py      # ← новое
 │   ├── theme_preview.py
 │   └── ...
 ├── LICENSE
@@ -171,6 +175,7 @@ DragonForge-AI/
 - [x] Интерактивный режим с выбором действий
 - [x] UI-кит Dragon-Tailwind (базовая палитра + CSS)
 - [x] Вечерний полёт в седле (habits + save)
+- [x] Рассветный пикник в седле (новые привычки рассвета и огонька)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Более глубокая эволюция души и графовая память
