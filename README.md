@@ -56,7 +56,8 @@ python examples/dragon_with_saddle.py
 python examples/morning_with_dragon.py
 python examples/evening_saddle_flight.py
 python examples/dawn_saddle_picnic.py
-python examples/starry_saddle_flight.py        # ← НОВОЕ! звёздный ночной полёт в седле
+python examples/starry_saddle_flight.py
+python examples/sunday_saddle_flight.py        # ← НОВОЕ! воскресный дневной полёт в седле
 python examples/saddle_flight_adventure.py
 python examples/saddle_choice_adventure.py
 python examples/habits_demo.py
@@ -97,6 +98,9 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - любит ночные полёты под звёздами
 - шепчет имена созвездий
 - ставит седло под луну
+- любит воскресные полёты
+- греет седло солнцем
+- ищет облака-подушки
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -125,6 +129,7 @@ print(get_theme_css())
 - [x] Сохранение/загрузка, LLM, интерактив
 - [x] Полёты в седле: утренний, вечерний, рассветный пикник
 - [x] Звёздный ночной полёт в седле (ночные привычки неба)
+- [x] Воскресный дневной полёт в седле (тёплое седло и облака-подушки)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
