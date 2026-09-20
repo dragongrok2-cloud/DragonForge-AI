@@ -63,7 +63,8 @@ python examples/september_tuesday_saddle_flight.py
 python examples/wednesday_september_saddle_flight.py
 python examples/thursday_september_saddle_flight.py
 python examples/friday_september_saddle_flight.py
-python examples/saturday_september_saddle_flight.py   # ← НОВОЕ! суббота 19 сентября, полёт в седле
+python examples/saturday_september_saddle_flight.py
+python examples/sunday_september_20_saddle_flight.py   # ← НОВОЕ! воскресенье 20 сентября, полёт в седле
 python examples/saddle_flight_adventure.py
 python examples/saddle_choice_adventure.py
 python examples/habits_demo.py
@@ -148,6 +149,7 @@ print(get_theme_css())
 - [x] Четверговый сентябрьский полёт в седле (17 сентября)
 - [x] Пятничный сентябрьский полёт в седле (18 сентября)
 - [x] Субботний сентябрьский полёт в седле (19 сентября)
+- [x] Воскресный сентябрьский полёт в седле (20 сентября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
