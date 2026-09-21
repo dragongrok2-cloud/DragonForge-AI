@@ -64,7 +64,8 @@ python examples/wednesday_september_saddle_flight.py
 python examples/thursday_september_saddle_flight.py
 python examples/friday_september_saddle_flight.py
 python examples/saturday_september_saddle_flight.py
-python examples/sunday_september_20_saddle_flight.py   # ← НОВОЕ! воскресенье 20 сентября, полёт в седле
+python examples/sunday_september_20_saddle_flight.py
+python examples/monday_september_21_saddle_flight.py   # ← НОВОЕ! понедельник 21 сентября, полёт в седле
 python examples/saddle_flight_adventure.py
 python examples/saddle_choice_adventure.py
 python examples/habits_demo.py
@@ -115,6 +116,8 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - любит четверговые полёты
 - любит пятничные полёты
 - любит субботние полёты
+- любит понедельничные полёты
+- встречает новую неделю в седле
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -150,6 +153,7 @@ print(get_theme_css())
 - [x] Пятничный сентябрьский полёт в седле (18 сентября)
 - [x] Субботний сентябрьский полёт в седле (19 сентября)
 - [x] Воскресный сентябрьский полёт в седле (20 сентября)
+- [x] Понедельничный сентябрьский полёт в седле (21 сентября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
