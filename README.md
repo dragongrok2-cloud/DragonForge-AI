@@ -68,7 +68,8 @@ python examples/sunday_september_20_saddle_flight.py
 python examples/monday_september_21_saddle_flight.py
 python examples/monday_september_28_saddle_flight.py
 python examples/tuesday_september_29_saddle_flight.py
-python examples/wednesday_september_30_saddle_flight.py   # ← НОВОЕ! среда 30 сентября, последний сентябрьский полёт в седле
+python examples/wednesday_september_30_saddle_flight.py
+python examples/thursday_october_1_saddle_flight.py   # ← НОВОЕ! четверг 1 октября, первый осенний полёт в седле
 python examples/saddle_flight_adventure.py
 python examples/saddle_choice_adventure.py
 python examples/habits_demo.py
@@ -125,6 +126,8 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - любит вторничные полёты
 - провожает сентябрь из седла
 - встречает октябрь из седла
+- любит октябрьский ветер
+- считает золотые кроны с высоты
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -164,6 +167,7 @@ print(get_theme_css())
 - [x] Понедельничный сентябрьский полёт в седле (28 сентября)
 - [x] Вторничный сентябрьский полёт в седле (29 сентября)
 - [x] Средненедельный сентябрьский полёт в седле (30 сентября)
+- [x] Четверговый октябрьский полёт в седле (1 октября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
