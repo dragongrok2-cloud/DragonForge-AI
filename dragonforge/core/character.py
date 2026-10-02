@@ -39,6 +39,7 @@ class Character:
             "мягко садится перед выходными": 0.42,
             "проверяет седло в полдень": 0.36,
             "складывает крылья после полёта": 0.34,
+            "делится тёплым термосом в седле": 0.32,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -218,6 +219,37 @@ class Character:
             f"Радость {joy_after:.2f}. Привычка коллекционировать: {strength:.0%}."
         )
 
+
+    def pour_thermos(self, drink: str = "какао") -> str:
+        """Пятничный полдень: согреть термос крошечным огоньком и разделить глоток в седле."""
+        self.soul.strengthen_habit("делится тёплым термосом в седле", amount=0.05)
+        self.soul.strengthen_habit("греет всадника крылом", amount=0.01)
+        strength = self.soul.habits.get("делится тёплым термосом в седле", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        sips = {
+            "какао": "густое какао с облачной пенкой",
+            "чай": "травяной чай, настоянный на высоте",
+            "бульон": "тихий бульон, чтобы лапы не стыли",
+        }
+        sip = sips.get(drink.strip().lower(), f"тёплый {drink}")
+        self.memory.remember(
+            f"{self.name} разлил «{sip}» из термоса в седле. Привычка {strength:.0%}.",
+            metadata={"type": "thermos", "timestamp": str(datetime.now()), "drink": drink},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        return (
+            f"*приоткрывает крышку термоса и греет её крошечным огоньком*  \n"
+            f"Пятничный глоток в седле, всадник. Сегодня — {sip}. "
+            f"Крыло закрывает от ветра, ремни на месте. "
+            f"Радость {joy_after:.2f}. Привычка делиться термосом: {strength:.0%}."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -244,6 +276,10 @@ class Character:
 
         if any(w in msg_lower for w in ["подари камуш", "поделись камуш", "камушек в седло", "дар камуш"]):
             return self.share_pebble()
+
+        if any(w in msg_lower for w in ["термос", "какао", "глоток в седле", "налей чай"]):
+            drink = "чай" if "чай" in msg_lower else "какао"
+            return self.pour_thermos(drink)
 
         if any(w in msg_lower for w in ["проверь седло", "проверка седла", "три точки"]):
             return self.check_saddle()
