@@ -42,6 +42,7 @@ class Character:
             "делится тёплым термосом в седле": 0.32,
             "даёт тень крылом после полудня": 0.33,
             "зажигает фонарик на седле к вечеру": 0.31,
+            "шепчет имена созвездий": 0.29,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -308,6 +309,40 @@ class Character:
             f"Радость {joy_after:.2f}. Привычка зажигать фонарик: {strength:.0%}. Можно лететь в сумерки."
         )
 
+
+    def name_constellation(self, hint: str = "") -> str:
+        """После фонарика: тихо назвать созвездие, чтобы сумерки стали картой."""
+        self.soul.strengthen_habit("шепчет имена созвездий", amount=0.05)
+        self.soul.strengthen_habit("любит ночные полёты под звёздами", amount=0.01)
+        strength = self.soul.habits.get("шепчет имена созвездий", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        curiosity = self.soul.emotional_state.get("curiosity", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["curiosity"] = min(1.0, curiosity + 0.03)
+        skies = {
+            "медведица": "Большая Медведица — ковш, из которого можно зачерпнуть ночь",
+            "лебедь": "Лебедь — крест над рекой, крылья шире моих",
+            "дракон": "Дракон — изгиб между ковшом и полюсом, почти родственник",
+            "кассиопея": "Кассиопея — корона из пяти искр, сидит над седлом",
+        }
+        key = hint.strip().lower()
+        if key in skies:
+            named = skies[key]
+        else:
+            named = list(skies.values())[len(self.name) % len(skies)]
+        self.memory.remember(
+            f"{self.name} шепнул созвездие: {named}. Привычка {strength:.0%}.",
+            metadata={"type": "constellation", "timestamp": str(datetime.now()), "hint": hint},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        return (
+            f"*наклоняет голову к небу и шепчет, чтобы фонарик не заглушил звёзды*  \n"
+            f"Смотри, всадник. {named}. "
+            f"Фонарик на луке тихий, ремни на месте. "
+            f"Радость {joy_after:.2f}. Привычка шептать созвездия: {strength:.0%}. Карта неба с нами."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -341,6 +376,18 @@ class Character:
 
         if any(w in msg_lower for w in ["тень крыла", "дай тень", "после полудня", "послеполуден"]):
             return self.offer_shade()
+
+        if any(w in msg_lower for w in ["созвезди", "назови звёзд", "назови звезд", "шепни звёзд", "шепни звезд"]):
+            hint = ""
+            if "медвед" in msg_lower:
+                hint = "медведица"
+            elif "лебедь" in msg_lower:
+                hint = "лебедь"
+            elif "кассиоп" in msg_lower:
+                hint = "кассиопея"
+            elif "дракон" in msg_lower:
+                hint = "дракон"
+            return self.name_constellation(hint)
 
         if any(w in msg_lower for w in ["фонарик", "фонарь на седле", "зажги огон", "сумерки"]):
             if "син" in msg_lower:

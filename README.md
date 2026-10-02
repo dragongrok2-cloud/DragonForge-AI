@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -48,6 +48,7 @@ print(my_dragon.share_pebble())
 print(my_dragon.pour_thermos())
 print(my_dragon.offer_shade())
 print(my_dragon.light_lantern())
+print(my_dragon.name_constellation())
 print(my_dragon.soft_landing())
 print(my_dragon.describe_soul())
 
@@ -65,12 +66,13 @@ python examples/friday_afternoon_wing_fold.py
 python examples/friday_pebble_gift.py
 python examples/friday_thermos_sip.py   # ← тёплый глоток в седле
 python examples/friday_afternoon_shade.py   # тень крыла после полудня
-python examples/friday_evening_lantern.py   # ← НОВОЕ! фонарик на седле к вечеру
+python examples/friday_evening_lantern.py   # фонарик на седле к вечеру
+python examples/friday_evening_constellation.py   # ← НОВОЕ! шёпот созвездий над седлом
 python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py
 ```
 
 ### Подключение LLM (опционально)
@@ -122,6 +124,7 @@ print(dragon.share_pebble())
 print(dragon.pour_thermos("чай"))
 print(dragon.offer_shade())
 print(dragon.light_lantern("синий"))
+print(dragon.name_constellation("лебедь"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -154,6 +157,7 @@ print(get_theme_css())
 - [x] Тёплый термос в седле (`pour_thermos`, тесты, пятничный пример)
 - [x] Тень крыла после полудня (`offer_shade`, тесты, пример 2 октября)
 - [x] Вечерний фонарик на седле (`light_lantern`, тесты, пример 2 октября к вечеру)
+- [x] Вечерний шёпот созвездий (`name_constellation`, тесты, пример 2 октября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
