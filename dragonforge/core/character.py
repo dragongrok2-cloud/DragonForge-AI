@@ -38,6 +38,7 @@ class Character:
             "делится утренним огоньком": 0.30,
             "мягко садится перед выходными": 0.42,
             "проверяет седло в полдень": 0.36,
+            "складывает крылья после полёта": 0.34,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -167,6 +168,28 @@ class Character:
             f"Радость {joy:.2f}. Привычка проверки: {strength:.0%}. Можно взлетать."
         )
 
+    def fold_wings(self) -> str:
+        """Послеполётный ритуал: сложить крылья, проверить седло и чуть отдохнуть."""
+        self.soul.strengthen_habit("складывает крылья после полёта", amount=0.05)
+        self.soul.strengthen_habit("всегда проверяет седло", amount=0.01)
+        strength = self.soul.habits.get("складывает крылья после полёта", 0.0)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["energy"] = max(0.25, energy - 0.04)
+        self.soul.emotional_state["trust"] = min(1.0, self.soul.emotional_state.get("trust", 0.5) + 0.02)
+        self.soul.emotional_state["joy"] = min(1.0, self.soul.emotional_state.get("joy", 0.5) + 0.02)
+        energy_after = self.soul.emotional_state["energy"]
+        self.memory.remember(
+            f"После полёта {self.name} сложил крылья. Энергия {energy_after:.2f}, привычка {strength:.0%}.",
+            metadata={"type": "wing_fold", "timestamp": str(datetime.now())},
+            importance=0.55,
+        )
+        return (
+            f"*аккуратно складывает крылья вдоль боков и ещё раз трогает ремни седла*  \n"
+            f"Полёт окончен, всадник. Крылья сложены, седло на месте. "
+            f"Энергия чуть ниже — {energy_after:.2f}: так и должно быть после неба. "
+            f"Привычка складывать крылья: {strength:.0%}. Можно слезть, я никуда не денусь."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -187,6 +210,9 @@ class Character:
             return (f"*осторожно касается носом*  \n"
                     f"Всегда рад, {self.name} всегда рядом. "
                     f"Мы же команда!")
+
+        if any(w in msg_lower for w in ["сложи крыл", "крылья слож", "после полёта", "после полета"]):
+            return self.fold_wings()
 
         if any(w in msg_lower for w in ["проверь седло", "проверка седла", "три точки"]):
             return self.check_saddle()
