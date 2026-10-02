@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -44,6 +44,7 @@ print(my_dragon.mood())
 print(my_dragon.habits())
 print(my_dragon.check_saddle())
 print(my_dragon.fold_wings())
+print(my_dragon.share_pebble())
 print(my_dragon.soft_landing())
 print(my_dragon.describe_soul())
 
@@ -57,12 +58,13 @@ loaded = Character.load("my_dragon.json")
 python examples/basic_dragon.py
 python examples/dragon_with_saddle.py
 python examples/friday_october_2_saddle_flight.py
-python examples/friday_afternoon_wing_fold.py   # ← НОВОЕ! после полудня складываем крылья
+python examples/friday_afternoon_wing_fold.py
+python examples/friday_pebble_gift.py   # ← НОВОЕ! камушек в седло после полёта
 python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py
 ```
 
 ### Подключение LLM (опционально)
@@ -107,6 +109,7 @@ dragon.soul.strengthen_habit("любит почесывания за ухом", 
 dragon.soul.add_habit("всегда ждёт у окна", 0.4)
 print(dragon.check_saddle())
 print(dragon.fold_wings())
+print(dragon.share_pebble())
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -135,6 +138,7 @@ print(get_theme_css())
 - [x] Мягкая посадка перед выходными (`soft_landing`, тесты)
 - [x] Полуденная проверка седла (`check_saddle`, тесты)
 - [x] Послеполётное складывание крыльев (`fold_wings`, тесты, пример 2 октября после полудня)
+- [x] Дар блестящего камушка (`share_pebble`, тесты, пятничный пример)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души

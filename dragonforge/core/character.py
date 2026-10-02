@@ -190,6 +190,34 @@ class Character:
             f"Привычка складывать крылья: {strength:.0%}. Можно слезть, я никуда не денусь."
         )
 
+    def share_pebble(self, place: str = "седло") -> str:
+        """Послеполётный дар: отдать всаднику блестящий камушек из коллекции."""
+        self.soul.strengthen_habit("собирает блестящие камушки", amount=0.05)
+        strength = self.soul.habits.get("собирает блестящие камушки", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(
+            1.0, self.soul.emotional_state.get("trust", 0.5) + 0.02
+        )
+        pebbles = [
+            "речной кварц с искоркой заката",
+            "осколок облачной слюды",
+            "тёплый янтарь, почти с хвоста кометы",
+        ]
+        gift = pebbles[len(self.name) % len(pebbles)]
+        self.memory.remember(
+            f"{self.name} подарил камушек «{gift}» и положил его в {place}. Привычка {strength:.0%}.",
+            metadata={"type": "pebble_gift", "timestamp": str(datetime.now()), "place": place},
+            importance=0.6,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        return (
+            f"*достаёт из-под чешуи тёплый камушек и кладёт его в {place}*  \n"
+            f"Это тебе, всадник. {gift.capitalize()}. "
+            f"Я собирал такие в полёте — теперь один живёт рядом с тобой. "
+            f"Радость {joy_after:.2f}. Привычка коллекционировать: {strength:.0%}."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -213,6 +241,9 @@ class Character:
 
         if any(w in msg_lower for w in ["сложи крыл", "крылья слож", "после полёта", "после полета"]):
             return self.fold_wings()
+
+        if any(w in msg_lower for w in ["подари камуш", "поделись камуш", "камушек в седло", "дар камуш"]):
+            return self.share_pebble()
 
         if any(w in msg_lower for w in ["проверь седло", "проверка седла", "три точки"]):
             return self.check_saddle()
