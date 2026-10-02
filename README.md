@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -42,6 +42,7 @@ print(my_dragon.talk("Привет, как прошёл день?"))
 print(my_dragon.talk("Почеши за ухом"))
 print(my_dragon.mood())
 print(my_dragon.habits())
+print(my_dragon.soft_landing())
 print(my_dragon.describe_soul())
 
 my_dragon.save("my_dragon.json")
@@ -70,12 +71,14 @@ python examples/monday_september_28_saddle_flight.py
 python examples/tuesday_september_29_saddle_flight.py
 python examples/wednesday_september_30_saddle_flight.py
 python examples/thursday_october_1_saddle_flight.py
-python examples/friday_october_2_saddle_flight.py   # ← НОВОЕ! пятница 2 октября, полёт в седле перед выходными
+python examples/friday_october_2_saddle_flight.py
+python examples/friday_soft_landing.py   # ← НОВОЕ! мягкая посадка в седле перед выходными
 python examples/saddle_flight_adventure.py
 python examples/saddle_choice_adventure.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
 python examples/theme_preview.py
+pytest tests/test_soft_landing.py
 ```
 
 ### Подключение LLM (опционально)
@@ -111,6 +114,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - любит ночные полёты под звёздами
 - шепчет имена созвездий
 - ставит седло под луну
+- мягко садится перед выходными
 - любит воскресные полёты
 - греет седло солнцем
 - ищет облака-подушки
@@ -135,6 +139,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
 dragon.soul.add_habit("всегда ждёт у окна", 0.4)
+print(dragon.soft_landing())
 print(dragon.habits())
 ```
 
@@ -172,6 +177,7 @@ print(get_theme_css())
 - [x] Средненедельный сентябрьский полёт в седле (30 сентября)
 - [x] Четверговый октябрьский полёт в седле (1 октября)
 - [x] Пятничный октябрьский полёт в седле (2 октября)
+- [x] Мягкая посадка перед выходными (`soft_landing`, тесты)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
