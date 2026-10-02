@@ -37,6 +37,7 @@ class Character:
             "любит рассветы над облаками": 0.40,
             "делится утренним огоньком": 0.30,
             "мягко садится перед выходными": 0.42,
+            "проверяет седло в полдень": 0.36,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -143,6 +144,29 @@ class Character:
             f"Крылья сложены, седло на месте. Перед выходными я рядом. Привычка: {strength:.0%}."
         )
 
+    def check_saddle(self) -> str:
+        """Полуденный ритуал: три точки седла, прежде чем снова взлететь."""
+        self.soul.strengthen_habit("проверяет седло в полдень", amount=0.05)
+        self.soul.strengthen_habit("всегда проверяет седло", amount=0.02)
+        strength = self.soul.habits.get("проверяет седло в полдень", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        points = [
+            "ремни — не скрипят и не болтаются",
+            "седло — тёплое, ровно по хребту",
+            "крыло — даёт тень, если солнце жёсткое",
+        ]
+        checklist = "\n".join(f"  {i}. {point}" for i, point in enumerate(points, 1))
+        self.memory.remember(
+            f"Полуденная проверка седла с {self.name}: привычка {strength:.0%}.",
+            metadata={"type": "saddle_check", "timestamp": str(datetime.now())},
+            importance=0.5,
+        )
+        return (
+            f"*обнюхивает ремни и тихо урчит*  \n"
+            f"Полуденная проверка седла, всадник. Три точки:\n{checklist}\n"
+            f"Радость {joy:.2f}. Привычка проверки: {strength:.0%}. Можно взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -163,6 +187,9 @@ class Character:
             return (f"*осторожно касается носом*  \n"
                     f"Всегда рад, {self.name} всегда рядом. "
                     f"Мы же команда!")
+
+        if any(w in msg_lower for w in ["проверь седло", "проверка седла", "три точки"]):
+            return self.check_saddle()
 
         if any(w in msg_lower for w in ["посадк", "приземл", "садимся", "выходн"]):
             return (f"*наклоняет крыло, чтобы сесть было легче*  \n"
