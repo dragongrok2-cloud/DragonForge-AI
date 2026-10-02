@@ -43,6 +43,7 @@ class Character:
             "даёт тень крылом после полудня": 0.33,
             "зажигает фонарик на седле к вечеру": 0.31,
             "шепчет имена созвездий": 0.29,
+            "разворачивается к гнезду к ночи": 0.28,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -343,6 +344,32 @@ class Character:
             f"Радость {joy_after:.2f}. Привычка шептать созвездия: {strength:.0%}. Карта неба с нами."
         )
 
+    def bank_home(self, nest: str = "гнездо у реки") -> str:
+        """После карты неба: мягко развернуть крыло к гнезду, пока вечер ещё тёплый."""
+        self.soul.strengthen_habit("разворачивается к гнезду к ночи", amount=0.05)
+        self.soul.strengthen_habit("всегда проверяет седло", amount=0.01)
+        strength = self.soul.habits.get("разворачивается к гнезду к ночи", 0.0)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.28, energy - 0.02)
+        self.soul.emotional_state["joy"] = min(1.0, self.soul.emotional_state.get("joy", 0.5) + 0.02)
+        place = nest.strip() or "гнездо у реки"
+        self.memory.remember(
+            f"{self.name} развернулся к гнезду «{place}». Привычка {strength:.0%}.",
+            metadata={"type": "bank_home", "timestamp": str(datetime.now()), "nest": place},
+            importance=0.6,
+        )
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*чуть кренит крыло и носом указывает тёплый огонёк внизу*  \n"
+            f"Карта неба прочитана, всадник. Разворачиваемся к дому: {place}. "
+            f"Седло держит, фонарик на луке не гаснет. "
+            f"Доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка разворачиваться к гнезду: {strength:.0%}. Гнездо ждёт."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -388,6 +415,14 @@ class Character:
             elif "дракон" in msg_lower:
                 hint = "дракон"
             return self.name_constellation(hint)
+
+        if any(w in msg_lower for w in ["к гнезду", "домой", "разворот домой", "к дому"]):
+            nest = "гнездо у реки"
+            if "пещер" in msg_lower:
+                nest = "пещера на утёсе"
+            elif "озер" in msg_lower or "озёр" in msg_lower:
+                nest = "гнездо у озера"
+            return self.bank_home(nest)
 
         if any(w in msg_lower for w in ["фонарик", "фонарь на седле", "зажги огон", "сумерки"]):
             if "син" in msg_lower:
