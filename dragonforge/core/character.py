@@ -41,6 +41,7 @@ class Character:
             "складывает крылья после полёта": 0.34,
             "делится тёплым термосом в седле": 0.32,
             "даёт тень крылом после полудня": 0.33,
+            "зажигает фонарик на седле к вечеру": 0.31,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -276,6 +277,37 @@ class Character:
             f"Энергия {energy_after:.2f}. Привычка давать тень: {strength:.0%}. Можно лететь дальше."
         )
 
+
+    def light_lantern(self, hue: str = "янтарный") -> str:
+        """К вечеру: зажечь маленький фонарик на луке седла, прежде чем сумерки станут полётом."""
+        self.soul.strengthen_habit("зажигает фонарик на седле к вечеру", amount=0.05)
+        self.soul.strengthen_habit("любит ночные полёты под звёздами", amount=0.01)
+        strength = self.soul.habits.get("зажигает фонарик на седле к вечеру", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["energy"] = max(0.3, energy - 0.01)
+        flames = {
+            "янтарный": "янтарный огонёк, как последний свет над кромкой леса",
+            "синий": "тихий синий огонёк, чтобы не слепить звёзды",
+            "золотой": "золотая искорка, тёплая на луке седла",
+        }
+        flame = flames.get(hue.strip().lower(), f"{hue} огонёк")
+        self.memory.remember(
+            f"{self.name} зажёг фонарик на седле: {flame}. Привычка {strength:.0%}.",
+            metadata={"type": "saddle_lantern", "timestamp": str(datetime.now()), "hue": hue},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        return (
+            f"*чиркает когтем по фитилю и прикрывает огонёк лапой от ветра*  \n"
+            f"Вечер близко, всадник. На луке седла — {flame}. "
+            f"Ремни на месте, крыло не задевает стекло. "
+            f"Радость {joy_after:.2f}. Привычка зажигать фонарик: {strength:.0%}. Можно лететь в сумерки."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -309,6 +341,15 @@ class Character:
 
         if any(w in msg_lower for w in ["тень крыла", "дай тень", "после полудня", "послеполуден"]):
             return self.offer_shade()
+
+        if any(w in msg_lower for w in ["фонарик", "фонарь на седле", "зажги огон", "сумерки"]):
+            if "син" in msg_lower:
+                hue = "синий"
+            elif "золот" in msg_lower:
+                hue = "золотой"
+            else:
+                hue = "янтарный"
+            return self.light_lantern(hue)
 
         if any(w in msg_lower for w in ["проверь седло", "проверка седла", "три точки"]):
             return self.check_saddle()
