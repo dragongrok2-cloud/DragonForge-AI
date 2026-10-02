@@ -331,7 +331,7 @@ class Character:
         else:
             named = list(skies.values())[len(self.name) % len(skies)]
         self.memory.remember(
-            f"{self.name} шепнул созвездие: {named}. Привычка {strength:.0%}.",
+            f"{self.name} шепнул созвездие {named}. Привычка {strength:.0%}.",
             metadata={"type": "constellation", "timestamp": str(datetime.now()), "hint": hint},
             importance=0.55,
         )
