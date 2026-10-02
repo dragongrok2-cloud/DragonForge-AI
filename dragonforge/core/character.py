@@ -36,6 +36,7 @@ class Character:
             "собирает блестящие камушки": 0.35,
             "любит рассветы над облаками": 0.40,
             "делится утренним огоньком": 0.30,
+            "мягко садится перед выходными": 0.42,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -119,6 +120,29 @@ class Character:
         """Показать все привычки дракона с их силой."""
         return self.soul.describe_habits()
 
+    def soft_landing(self) -> str:
+        """Мягкая посадка перед выходными: седло на месте, крылья сложены."""
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        self.soul.strengthen_habit("мягко садится перед выходными", amount=0.04)
+        strength = self.soul.habits.get("мягко садится перед выходными", 0.0)
+        self.memory.remember(
+            f"Мягкая посадка с {self.name}: энергия {energy:.2f}, радость {joy:.2f}.",
+            metadata={"type": "landing", "timestamp": str(datetime.now())},
+            importance=0.55,
+        )
+        if energy < 0.45:
+            return (
+                f"*опускается по широкой спирали и стелет крыло*  \n"
+                f"Энергии мало ({energy:.2f}). Садимся мягко, всадник. "
+                f"Седло тёплое, выходные подождут нас на земле. Привычка посадки: {strength:.0%}."
+            )
+        return (
+            f"*ровно касается лапами мха и проверяет ремни седла*  \n"
+            f"Посадка мягкая. Радость {joy:.2f}, энергия {energy:.2f}. "
+            f"Крылья сложены, седло на месте. Перед выходными я рядом. Привычка: {strength:.0%}."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -139,6 +163,11 @@ class Character:
             return (f"*осторожно касается носом*  \n"
                     f"Всегда рад, {self.name} всегда рядом. "
                     f"Мы же команда!")
+
+        if any(w in msg_lower for w in ["посадк", "приземл", "садимся", "выходн"]):
+            return (f"*наклоняет крыло, чтобы сесть было легче*  \n"
+                    f"Садимся мягко. Седло держит, ремни не скрипят. "
+                    f"Выходные можно встретить на земле — я никуда не денусь.")
 
         if any(w in msg_lower for w in ["рассвет", "рассветн", "восход"]):
             extra = ""
