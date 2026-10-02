@@ -40,6 +40,7 @@ class Character:
             "проверяет седло в полдень": 0.36,
             "складывает крылья после полёта": 0.34,
             "делится тёплым термосом в седле": 0.32,
+            "даёт тень крылом после полудня": 0.33,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -250,6 +251,31 @@ class Character:
             f"Радость {joy_after:.2f}. Привычка делиться термосом: {strength:.0%}."
         )
 
+    def offer_shade(self) -> str:
+        """После полудня: накрыть всадника крылом, пока солнце ещё жёсткое."""
+        self.soul.strengthen_habit("даёт тень крылом после полудня", amount=0.05)
+        self.soul.strengthen_habit("греет всадника крылом", amount=0.01)
+        strength = self.soul.habits.get("даёт тень крылом после полудня", 0.0)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.03)
+        self.soul.emotional_state["trust"] = min(
+            1.0, self.soul.emotional_state.get("trust", 0.5) + 0.02
+        )
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        energy_after = self.soul.emotional_state["energy"]
+        self.memory.remember(
+            f"{self.name} дал тень крылом после полудня. Энергия {energy_after:.2f}, привычка {strength:.0%}.",
+            metadata={"type": "wing_shade", "timestamp": str(datetime.now())},
+            importance=0.55,
+        )
+        return (
+            f"*расправляет одно крыло над седлом, как тихий навес*  \n"
+            f"После полудня солнце ещё жёсткое, всадник. Посиди в тени крыла. "
+            f"Ремни не трогаем, седло на месте, ветер обходит нас стороной. "
+            f"Энергия {energy_after:.2f}. Привычка давать тень: {strength:.0%}. Можно лететь дальше."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -280,6 +306,9 @@ class Character:
         if any(w in msg_lower for w in ["термос", "какао", "глоток в седле", "налей чай"]):
             drink = "чай" if "чай" in msg_lower else "какао"
             return self.pour_thermos(drink)
+
+        if any(w in msg_lower for w in ["тень крыла", "дай тень", "после полудня", "послеполуден"]):
+            return self.offer_shade()
 
         if any(w in msg_lower for w in ["проверь седло", "проверка седла", "три точки"]):
             return self.check_saddle()

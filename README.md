@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -46,6 +46,7 @@ print(my_dragon.check_saddle())
 print(my_dragon.fold_wings())
 print(my_dragon.share_pebble())
 print(my_dragon.pour_thermos())
+print(my_dragon.offer_shade())
 print(my_dragon.soft_landing())
 print(my_dragon.describe_soul())
 
@@ -61,12 +62,13 @@ python examples/dragon_with_saddle.py
 python examples/friday_october_2_saddle_flight.py
 python examples/friday_afternoon_wing_fold.py
 python examples/friday_pebble_gift.py
-python examples/friday_thermos_sip.py   # ← НОВОЕ! тёплый глоток в седле
+python examples/friday_thermos_sip.py   # ← тёплый глоток в седле
+python examples/friday_afternoon_shade.py   # ← НОВОЕ! тень крыла после полудня
 python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py
 ```
 
 ### Подключение LLM (опционально)
@@ -106,6 +108,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - проверяет седло в полдень
 - складывает крылья после полёта
 - делится тёплым термосом в седле
+- даёт тень крылом после полудня
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -114,6 +117,7 @@ print(dragon.check_saddle())
 print(dragon.fold_wings())
 print(dragon.share_pebble())
 print(dragon.pour_thermos("чай"))
+print(dragon.offer_shade())
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -144,6 +148,7 @@ print(get_theme_css())
 - [x] Послеполётное складывание крыльев (`fold_wings`, тесты, пример 2 октября после полудня)
 - [x] Дар блестящего камушка (`share_pebble`, тесты, пятничный пример)
 - [x] Тёплый термос в седле (`pour_thermos`, тесты, пятничный пример)
+- [x] Тень крыла после полудня (`offer_shade`, тесты, пример 2 октября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
