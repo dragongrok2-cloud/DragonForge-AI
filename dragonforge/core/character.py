@@ -48,6 +48,7 @@ class Character:
             "подтягивает подпругу после росы": 0.26,
             "выравнивает стремена к полудню": 0.25,
             "прогревает поводья после полудня": 0.24,
+            "делится облачной ягодой после поводьев": 0.23,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -481,6 +482,34 @@ class Character:
             f"Привычка прогревать поводья: {strength:.0%}. Можно взять повод."
         )
 
+    def share_cloudberry(self, berry: str = "облачная ягода") -> str:
+        """После тёплых поводьев: поделиться ягодой из седельной сумки."""
+        self.soul.strengthen_habit("делится облачной ягодой после поводьев", amount=0.05)
+        self.soul.strengthen_habit("прогревает поводья после полудня", amount=0.01)
+        strength = self.soul.habits.get("делится облачной ягодой после поводьев", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.01)
+        self.soul.emotional_state["trust"] = min(
+            1.0, self.soul.emotional_state.get("trust", 0.5) + 0.02
+        )
+        treat = berry.strip() or "облачная ягода"
+        self.memory.remember(
+            f"{self.name} поделился облачной ягодой в седле, ягода для всадника, угощение {treat}, привычка {strength:.0%}",
+            metadata={"type": "share_cloudberry", "timestamp": str(datetime.now()), "berry": treat},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*достаёт из седельной сумки тёплую {treat} и кладёт на ладонь*  \n"
+            f"После поводьев, всадник. Ладони уже не стынут, можно и сладкий глоток ветра. "
+            f"{treat.capitalize()} чуть кисло-медовая, как облако над лугом. "
+            f"Радость {joy_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка делиться облачной ягодой: {strength:.0%}. Одну тебе, одну мне."
+        )
+
 
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
@@ -545,6 +574,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["ягод", "облачн", "поделись ягод", "седельная сумка"]):
+            berry = "облачная ягода"
+            if "морош" in msg_lower:
+                berry = "морошка"
+            elif "черник" in msg_lower:
+                berry = "черника с хребта"
+            elif "рябин" in msg_lower:
+                berry = "рябина"
+            return self.share_cloudberry(berry)
 
         if any(w in msg_lower for w in ["повод", "поводья", "прогрей повод", "поводья тёплые"]):
             grip = "обе руки"
