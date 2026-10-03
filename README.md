@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -75,7 +75,8 @@ python examples/friday_evening_lantern.py   # фонарик на седле к 
 python examples/friday_evening_constellation.py   # шёпот созвездий над седлом
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
-python examples/saturday_share_cloudberry.py   # ← НОВОЕ! облачная ягода после поводьев
+python examples/saturday_point_horizon.py      # ← НОВОЕ! горизонт после ягоды
+python examples/saturday_share_cloudberry.py   # облачная ягода после поводьев
 python examples/saturday_warm_reins.py   # тёплые поводья после полудня
 python examples/saturday_adjust_stirrup.py   # стремена к полудню
 python examples/saturday_cinch_girth.py   # подпруга после росы
@@ -83,7 +84,7 @@ python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py
 ```
 
 ### Подключение LLM (опционально)
@@ -124,6 +125,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - выравнивает стремена к полудню
 - прогревает поводья после полудня
 - делится облачной ягодой после поводьев
+- указывает горизонт после ягоды
 - ставит седло под луну
 - мягко садится перед выходными
 - проверяет седло в полдень
@@ -148,6 +150,7 @@ print(dragon.cinch_girth("на одну дырочку"))
 print(dragon.adjust_stirrup("левое и правое"))
 print(dragon.warm_reins("обе руки"))
 print(dragon.share_cloudberry("морошка"))
+print(dragon.point_horizon("запад"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -187,6 +190,7 @@ print(get_theme_css())
 - [x] Полуденные стремена (`adjust_stirrup`, тесты, пример 3 октября)
 - [x] Тёплые поводья после полудня (`warm_reins`, тесты, пример 3 октября)
 - [x] Облачная ягода после поводьев (`share_cloudberry`, тесты, пример 3 октября)
+- [x] Горизонт после ягоды (`point_horizon`, тесты, пример 3 октября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души

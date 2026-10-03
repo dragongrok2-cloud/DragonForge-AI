@@ -49,6 +49,7 @@ class Character:
             "выравнивает стремена к полудню": 0.25,
             "прогревает поводья после полудня": 0.24,
             "делится облачной ягодой после поводьев": 0.23,
+            "указывает горизонт после ягоды": 0.22,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -511,6 +512,35 @@ class Character:
         )
 
 
+
+    def point_horizon(self, bearing: str = "запад") -> str:
+        """После ягоды: указать горизонт, куда ещё успеет ветер до вечера."""
+        self.soul.strengthen_habit("указывает горизонт после ягоды", amount=0.05)
+        self.soul.strengthen_habit("делится облачной ягодой после поводьев", amount=0.01)
+        strength = self.soul.habits.get("указывает горизонт после ягоды", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        self.soul.emotional_state["trust"] = min(
+            1.0, self.soul.emotional_state.get("trust", 0.5) + 0.02
+        )
+        way = bearing.strip() or "запад"
+        self.memory.remember(
+            f"{self.name} указал горизонт в седле, сторона {way}, привычка {strength:.0%}",
+            metadata={"type": "point_horizon", "timestamp": str(datetime.now()), "bearing": way},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*поднимает коготь к линии неба и чуть кренит седло*  \n"
+            f"После ягоды, всадник. Ладонь ещё сладкая, а горизонт — {way}. "
+            f"Там ветер ровнее, облака не закрывают путь, до вечера успеем круг. "
+            f"Радость {joy_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка указывать горизонт: {strength:.0%}. Смотри туда, я держу курс."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -574,6 +604,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["горизонт", "куда летим", "укажи курс", "сторона ветра"]):
+            bearing = "запад"
+            if "восток" in msg_lower:
+                bearing = "восток"
+            elif "север" in msg_lower:
+                bearing = "север"
+            elif "юг" in msg_lower:
+                bearing = "юг"
+            return self.point_horizon(bearing)
 
         if any(w in msg_lower for w in ["ягод", "облачн", "поделись ягод", "седельная сумка"]):
             berry = "облачная ягода"
