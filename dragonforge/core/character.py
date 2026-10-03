@@ -53,6 +53,7 @@ class Character:
             "ловит термик после горизонта": 0.21,
             "выравнивает планирование после термика": 0.20,
             "отмечает хребет после планирования": 0.19,
+            "выбирает уступ после хребта": 0.18,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -628,6 +629,34 @@ class Character:
             f"Привычка отмечать хребет: {strength:.0%}. Запомни изгиб — я его уже помню."
         )
 
+
+    def choose_ledge(self, ledge: str = "широкий уступ под хребтом") -> str:
+        """После отметки хребта: выбрать уступ, чтобы вечерний спуск был мягким."""
+        self.soul.strengthen_habit("выбирает уступ после хребта", amount=0.05)
+        self.soul.strengthen_habit("отмечает хребет после планирования", amount=0.01)
+        strength = self.soul.habits.get("выбирает уступ после хребта", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.2, energy - 0.02)
+        spot = ledge.strip() or "широкий уступ под хребтом"
+        self.memory.remember(
+            f"{self.name} выбрал уступ в седле: {spot}, привычка {strength:.0%}",
+            metadata={"type": "choose_ledge", "timestamp": str(datetime.now()), "ledge": spot},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*снижает одно крыло и кивает на плоский камень под гребнем*  \n"
+            f"После хребта, всадник. Метка на месте, теперь садимся на {spot}. "
+            f"Седло ровное, стремена не болтаются, спуск будет мягким. "
+            f"Радость {joy_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка выбирать уступ: {strength:.0%}. Держись за луку — я уже выбрал."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -691,6 +720,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["уступ", "выбери полк", "площадк для посад", "камень под гребнем"]):
+            ledge = "широкий уступ под хребтом"
+            if "рек" in msg_lower:
+                ledge = "речной уступ у излучины"
+            elif "скал" in msg_lower or "утёс" in msg_lower or "утес" in msg_lower:
+                ledge = "скальный уступ над тёплым склоном"
+            elif "обл" in msg_lower:
+                ledge = "облачный уступ на кромке"
+            return self.choose_ledge(ledge)
 
         if any(w in msg_lower for w in ["отметь хреб", "запомни хреб", "метку на хреб", "ориентир"]):
             ridge = "дальний хребет над лугом"
