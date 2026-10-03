@@ -44,6 +44,7 @@ class Character:
             "зажигает фонарик на седле к вечеру": 0.31,
             "шепчет имена созвездий": 0.29,
             "разворачивается к гнезду к ночи": 0.28,
+            "смахивает утреннюю росу с седла": 0.27,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -370,6 +371,33 @@ class Character:
             f"Привычка разворачиваться к гнезду: {strength:.0%}. Гнездо ждёт."
         )
 
+    def brush_dew(self, spot: str = "лука седла") -> str:
+        """Субботнее утро: смахнуть росу с седла, прежде чем выходные станут полётом."""
+        self.soul.strengthen_habit("смахивает утреннюю росу с седла", amount=0.05)
+        self.soul.strengthen_habit("любит рассветы над облаками", amount=0.01)
+        strength = self.soul.habits.get("смахивает утреннюю росу с седла", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        curiosity = self.soul.emotional_state.get("curiosity", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        self.soul.emotional_state["curiosity"] = min(1.0, curiosity + 0.01)
+        place = spot.strip() or "лука седла"
+        self.memory.remember(
+            f"{self.name} смахнул утреннюю росу с места «{place}». Привычка {strength:.0%}.",
+            metadata={"type": "brush_dew", "timestamp": str(datetime.now()), "spot": place},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*осторожно проводит крылом по мокрой коже и стряхивает капли*  \n"
+            f"Субботнее утро, всадник. Роса ещё на месте: {place}. "
+            f"Смахиваю, чтобы ремни не скользили, а седло грелось от дыхания. "
+            f"Радость {joy_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка смахивать росу: {strength:.0%}. Можно седлаться к выходному полёту."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -415,6 +443,16 @@ class Character:
             elif "дракон" in msg_lower:
                 hint = "дракон"
             return self.name_constellation(hint)
+
+        if any(w in msg_lower for w in ["роса", "смахни росу", "утренняя роса", "капельки на седле"]):
+            spot = "лука седла"
+            if "стрем" in msg_lower:
+                spot = "стремена"
+            elif "попон" in msg_lower:
+                spot = "попона"
+            elif "крыл" in msg_lower:
+                spot = "сгиб крыла"
+            return self.brush_dew(spot)
 
         if any(w in msg_lower for w in ["к гнезду", "домой", "разворот домой", "к дому"]):
             nest = "гнездо у реки"

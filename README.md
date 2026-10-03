@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -50,6 +50,7 @@ print(my_dragon.offer_shade())
 print(my_dragon.light_lantern())
 print(my_dragon.name_constellation())
 print(my_dragon.bank_home())
+print(my_dragon.brush_dew())
 print(my_dragon.soft_landing())
 print(my_dragon.describe_soul())
 
@@ -69,12 +70,13 @@ python examples/friday_thermos_sip.py   # ← тёплый глоток в се�
 python examples/friday_afternoon_shade.py   # тень крыла после полудня
 python examples/friday_evening_lantern.py   # фонарик на седле к вечеру
 python examples/friday_evening_constellation.py   # шёпот созвездий над седлом
-python examples/friday_evening_bank_home.py   # ← НОВОЕ! разворот к гнезду
+python examples/friday_evening_bank_home.py   # разворот к гнезду
+python examples/saturday_october_3_saddle_flight.py   # ← НОВОЕ! роса на седле
 python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py
 ```
 
 ### Подключение LLM (опционально)
@@ -110,6 +112,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - любит ночные полёты под звёздами
 - шепчет имена созвездий
 - разворачивается к гнезду к ночи
+- смахивает утреннюю росу с седла
 - ставит седло под луну
 - мягко садится перед выходными
 - проверяет седло в полдень
@@ -129,6 +132,7 @@ print(dragon.offer_shade())
 print(dragon.light_lantern("синий"))
 print(dragon.name_constellation("лебедь"))
 print(dragon.bank_home("пещера на утёсе"))
+print(dragon.brush_dew("стремена"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -163,6 +167,7 @@ print(get_theme_css())
 - [x] Вечерний фонарик на седле (`light_lantern`, тесты, пример 2 октября к вечеру)
 - [x] Вечерний шёпот созвездий (`name_constellation`, тесты, пример 2 октября)
 - [x] Вечерний разворот к гнезду (`bank_home`, тесты, пример 2 октября)
+- [x] Субботняя роса на седле (`brush_dew`, тесты, пример 3 октября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
