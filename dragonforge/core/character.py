@@ -424,6 +424,32 @@ class Character:
             f"Доверие {trust_after:.2f}. Привычка подтягивать подпругу: {strength:.0%}. Можно садиться."
         )
 
+    def adjust_stirrup(self, side: str = "левое и правое") -> str:
+        """К полудню: выровнять стремена, чтобы ноги всадника сидели ровно после подпруги."""
+        self.soul.strengthen_habit("выравнивает стремена к полудню", amount=0.05)
+        self.soul.strengthen_habit("всегда проверяет седло", amount=0.01)
+        strength = self.soul.habits.get("выравнивает стремена к полудню", 0.0)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        leather = side.strip() or "левое и правое"
+        self.memory.remember(
+            f"{self.name} выровнял стремена для всадника, сторона {leather}, привычка {strength:.0%}",
+            metadata={"type": "adjust_stirrup", "timestamp": str(datetime.now()), "side": leather},
+            importance=0.55,
+        )
+        trust_after = self.soul.emotional_state["trust"]
+        joy_after = self.soul.emotional_state["joy"]
+        return (
+            f"*когтем подравнивает ремни стремян и проверяет, что пятки на одной высоте*  \n"
+            f"Субботний полдень, всадник. Подпруга уже держит, стремена — {leather}. "
+            f"Левое не ниже правого, кожа не перекручена. "
+            f"Доверие {trust_after:.2f}, радость {joy_after:.2f}. "
+            f"Привычка выравнивать стремена: {strength:.0%}. Можно садиться ровно."
+        )
+
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -487,6 +513,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["стремен", "стремя", "выровняй стремя", "подгони стремя", "пятка в седле"]):
+            side = "левое и правое"
+            if "лев" in msg_lower and "прав" not in msg_lower:
+                side = "левое"
+            elif "прав" in msg_lower and "лев" not in msg_lower:
+                side = "правое"
+            elif "на дыроч" in msg_lower:
+                side = "на одну дырочку ниже"
+            return self.adjust_stirrup(side)
 
         if any(w in msg_lower for w in ["к гнезду", "домой", "разворот домой", "к дому"]):
             nest = "гнездо у реки"
