@@ -50,6 +50,7 @@ class Character:
             "прогревает поводья после полудня": 0.24,
             "делится облачной ягодой после поводьев": 0.23,
             "указывает горизонт после ягоды": 0.22,
+            "ловит термик после горизонта": 0.21,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -541,6 +542,34 @@ class Character:
             f"Привычка указывать горизонт: {strength:.0%}. Смотри туда, я держу курс."
         )
 
+
+    def catch_thermal(self, lift: str = "тёплый столб над лугом") -> str:
+        """После горизонта: поймать термик и подняться без лишних взмахов."""
+        self.soul.strengthen_habit("ловит термик после горизонта", amount=0.05)
+        self.soul.strengthen_habit("указывает горизонт после ягоды", amount=0.01)
+        strength = self.soul.habits.get("ловит термик после горизонта", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        curiosity = self.soul.emotional_state.get("curiosity", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.03)
+        self.soul.emotional_state["curiosity"] = min(1.0, curiosity + 0.02)
+        column = lift.strip() or "тёплый столб над лугом"
+        self.memory.remember(
+            f"{self.name} поймал термик в седле: {column}, привычка {strength:.0%}",
+            metadata={"type": "catch_thermal", "timestamp": str(datetime.now()), "lift": column},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*расправляет крылья и встаёт в тёплый столб, почти не махая*  \n"
+            f"После горизонта, всадник. Курс виден, а подъём уже здесь: {column}. "
+            f"Седло ровное, поводья не натянуты, ветер сам несёт нас выше луга. "
+            f"Радость {joy_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка ловить термик: {strength:.0%}. Держись за луку, я не спешу."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -604,6 +633,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["термик", "восходящ", "тёплый столб", "теплый столб", "лови подъём", "лови подъем"]):
+            lift = "тёплый столб над лугом"
+            if "реч" in msg_lower:
+                lift = "термик над речной излучиной"
+            elif "скал" in msg_lower or "утёс" in msg_lower or "утес" in msg_lower:
+                lift = "узкий столб у прогретой скалы"
+            elif "пол" in msg_lower:
+                lift = "широкий подъём над полем"
+            return self.catch_thermal(lift)
 
         if any(w in msg_lower for w in ["горизонт", "куда летим", "укажи курс", "сторона ветра"]):
             bearing = "запад"
