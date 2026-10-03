@@ -51,6 +51,7 @@ class Character:
             "делится облачной ягодой после поводьев": 0.23,
             "указывает горизонт после ягоды": 0.22,
             "ловит термик после горизонта": 0.21,
+            "выравнивает планирование после термика": 0.20,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -570,6 +571,34 @@ class Character:
             f"Привычка ловить термик: {strength:.0%}. Держись за луку, я не спешу."
         )
 
+
+    def level_glide(self, path: str = "ровный край над лугом") -> str:
+        """После термика: выровнять крылья и планировать без лишнего крена."""
+        self.soul.strengthen_habit("выравнивает планирование после термика", amount=0.05)
+        self.soul.strengthen_habit("ловит термик после горизонта", amount=0.01)
+        strength = self.soul.habits.get("выравнивает планирование после термика", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = max(0.2, energy - 0.01)
+        edge = path.strip() or "ровный край над лугом"
+        self.memory.remember(
+            f"{self.name} выровнял планирование в седле: {edge}, привычка {strength:.0%}",
+            metadata={"type": "level_glide", "timestamp": str(datetime.now()), "path": edge},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        return (
+            f"*выравнивает крылья и ложится на ровный край, почти не кренясь*  \n"
+            f"После термика, всадник. Подъём взят, теперь держим {edge}. "
+            f"Седло ровное, стремена не болтаются, лука под ладонью. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+            f"Привычка выравнивать планирование: {strength:.0%}. Можно отпустить поводья на палец."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -633,6 +662,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["планир", "выровняй полёт", "выровняй полет", "ровный край", "глиссад"]):
+            path = "ровный край над лугом"
+            if "реч" in msg_lower:
+                path = "тихий край над речной излучиной"
+            elif "греб" in msg_lower or "хреб" in msg_lower:
+                path = "ровный гребень над тёплым склоном"
+            elif "обл" in msg_lower:
+                path = "мягкий край под облачной кромкой"
+            return self.level_glide(path)
 
         if any(w in msg_lower for w in ["термик", "восходящ", "тёплый столб", "теплый столб", "лови подъём", "лови подъем"]):
             lift = "тёплый столб над лугом"
