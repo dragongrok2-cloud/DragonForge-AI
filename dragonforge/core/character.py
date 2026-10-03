@@ -45,6 +45,7 @@ class Character:
             "шепчет имена созвездий": 0.29,
             "разворачивается к гнезду к ночи": 0.28,
             "смахивает утреннюю росу с седла": 0.27,
+            "подтягивает подпругу после росы": 0.26,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -398,6 +399,31 @@ class Character:
             f"Привычка смахивать росу: {strength:.0%}. Можно седлаться к выходному полёту."
         )
 
+
+    def cinch_girth(self, notch: str = "на одну дырочку") -> str:
+        """После росы: подтянуть подпругу, чтобы седло не сползло в субботнем круге."""
+        self.soul.strengthen_habit("подтягивает подпругу после росы", amount=0.05)
+        self.soul.strengthen_habit("всегда проверяет седло", amount=0.02)
+        strength = self.soul.habits.get("подтягивает подпругу после росы", 0.0)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        step = notch.strip() or "на одну дырочку"
+        self.memory.remember(
+            f"{self.name} подтянул подпругу {step}. Привычка {strength:.0%}.",
+            metadata={"type": "cinch_girth", "timestamp": str(datetime.now()), "notch": step},
+            importance=0.55,
+        )
+        trust_after = self.soul.emotional_state["trust"]
+        return (
+            f"*находит пряжку подпруги и мягко затягивает её {step}*  \n"
+            f"Роса уже смахнута, всадник. Подпруга была чуть свободной — "
+            f"подтягиваю {step}, чтобы седло не сползло на субботнем круге. "
+            f"Ремни сухие, пряжка не скрипит. "
+            f"Доверие {trust_after:.2f}. Привычка подтягивать подпругу: {strength:.0%}. Можно садиться."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -453,6 +479,14 @@ class Character:
             elif "крыл" in msg_lower:
                 spot = "сгиб крыла"
             return self.brush_dew(spot)
+
+        if any(w in msg_lower for w in ["подпруг", "затяни седло", "подтяни ремн", "пряжка седла"]):
+            notch = "на одну дырочку"
+            if "две" in msg_lower:
+                notch = "на две дырочки"
+            elif "чуть" in msg_lower:
+                notch = "чуть-чуть, только чтобы не болталась"
+            return self.cinch_girth(notch)
 
         if any(w in msg_lower for w in ["к гнезду", "домой", "разворот домой", "к дому"]):
             nest = "гнездо у реки"
