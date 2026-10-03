@@ -46,6 +46,8 @@ class Character:
             "разворачивается к гнезду к ночи": 0.28,
             "смахивает утреннюю росу с седла": 0.27,
             "подтягивает подпругу после росы": 0.26,
+            "выравнивает стремена к полудню": 0.25,
+            "прогревает поводья после полудня": 0.24,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -450,6 +452,36 @@ class Character:
         )
 
 
+
+    def warm_reins(self, grip: str = "обе руки") -> str:
+        """После полудня: прогреть поводья крошечным дыханием, чтобы ладони не стыли."""
+        self.soul.strengthen_habit("прогревает поводья после полудня", amount=0.05)
+        self.soul.strengthen_habit("греет всадника крылом", amount=0.01)
+        strength = self.soul.habits.get("прогревает поводья после полудня", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        self.soul.emotional_state["trust"] = min(
+            1.0, self.soul.emotional_state.get("trust", 0.5) + 0.02
+        )
+        palms = grip.strip() or "обе руки"
+        self.memory.remember(
+            f"{self.name} прогрел поводья для всадника, хват {palms}, привычка {strength:.0%}",
+            metadata={"type": "warm_reins", "timestamp": str(datetime.now()), "grip": palms},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*согревает кожаные поводья коротким тёплым дыханием и кладёт их на луку*  \n"
+            f"После полудня, всадник. Стремена уже ровные, поводья — для {palms}. "
+            f"Кожа не липкая и не ледяная, пальцы не стынут на ветру. "
+            f"Радость {joy_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка прогревать поводья: {strength:.0%}. Можно взять повод."
+        )
+
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -513,6 +545,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["повод", "поводья", "прогрей повод", "поводья тёплые"]):
+            grip = "обе руки"
+            if "лев" in msg_lower and "прав" not in msg_lower:
+                grip = "левая рука"
+            elif "прав" in msg_lower and "лев" not in msg_lower:
+                grip = "правая рука"
+            elif "одной" in msg_lower:
+                grip = "одна рука"
+            return self.warm_reins(grip)
 
         if any(w in msg_lower for w in ["стремен", "стремя", "выровняй стремя", "подгони стремя", "пятка в седле"]):
             side = "левое и правое"
