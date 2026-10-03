@@ -52,6 +52,7 @@ class Character:
             "указывает горизонт после ягоды": 0.22,
             "ловит термик после горизонта": 0.21,
             "выравнивает планирование после термика": 0.20,
+            "отмечает хребет после планирования": 0.19,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -599,6 +600,34 @@ class Character:
             f"Привычка выравнивать планирование: {strength:.0%}. Можно отпустить поводья на палец."
         )
 
+
+    def mark_ridge(self, ridge: str = "дальний хребет над лугом") -> str:
+        """После ровного планирования: отметить хребет, чтобы обратный путь не потерялся."""
+        self.soul.strengthen_habit("отмечает хребет после планирования", amount=0.05)
+        self.soul.strengthen_habit("выравнивает планирование после термика", amount=0.01)
+        strength = self.soul.habits.get("отмечает хребет после планирования", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        curiosity = self.soul.emotional_state.get("curiosity", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["curiosity"] = min(1.0, curiosity + 0.03)
+        mark = ridge.strip() or "дальний хребет над лугом"
+        self.memory.remember(
+            f"{self.name} отметил хребет в седле: {mark}, привычка {strength:.0%}",
+            metadata={"type": "mark_ridge", "timestamp": str(datetime.now()), "ridge": mark},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        curiosity_after = self.soul.emotional_state["curiosity"]
+        return (
+            f"*наклоняет морду к дальнему гребню и чертит его когтем по воздуху*  \n"
+            f"После планирования, всадник. Край ровный, теперь метка на {mark}. "
+            f"Седло не сползает, лука под ладонью, обратный путь не потеряется. "
+            f"Радость {joy_after:.2f}, любопытство {curiosity_after:.2f}. "
+            f"Привычка отмечать хребет: {strength:.0%}. Запомни изгиб — я его уже помню."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -662,6 +691,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["отметь хреб", "запомни хреб", "метку на хреб", "ориентир"]):
+            ridge = "дальний хребет над лугом"
+            if "рек" in msg_lower:
+                ridge = "речной хребет у излучины"
+            elif "скал" in msg_lower or "утёс" in msg_lower or "утес" in msg_lower:
+                ridge = "скальный хребет над тёплым склоном"
+            elif "обл" in msg_lower:
+                ridge = "облачный хребет на кромке"
+            return self.mark_ridge(ridge)
 
         if any(w in msg_lower for w in ["планир", "выровняй полёт", "выровняй полет", "ровный край", "глиссад"]):
             path = "ровный край над лугом"
