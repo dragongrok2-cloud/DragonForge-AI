@@ -60,6 +60,7 @@ class Character:
             "дышит теплом после медленного моргания": 0.14,
             "делает короткий круг после тёплого выдоха": 0.14,
             "опускается на траву после короткого круга": 0.12,
+            "гудит низко после приседа на траву": 0.11,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -833,6 +834,35 @@ class Character:
             f"Привычка тихого приседа: {strength:.0%}. Луг держит нас обоих."
         )
 
+
+    def hum_low(self, note: str = "тихий гул над травой") -> str:
+        """После приседа на траву: низкий гул — седло помнит вибрацию груди."""
+        self.soul.strengthen_habit("гудит низко после приседа на траву", amount=0.05)
+        self.soul.strengthen_habit("опускается на траву после короткого круга", amount=0.01)
+        strength = self.soul.habits.get("гудит низко после приседа на траву", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = max(0.0, energy - 0.01)
+        tone = note.strip() or "тихий гул над травой"
+        self.memory.remember(
+            f"{self.name} загудел низко в седле: {tone}, привычка {strength:.0%}",
+            metadata={"type": "hum_low", "timestamp": str(datetime.now()), "note": tone},
+            importance=0.56,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*сидит на траве и пускает низкий гул из груди, не снимая седла*  \n"
+            f"Присед уже тихий, всадник. Это — {tone}. "
+            f"Вибрация идёт по ремням: я здесь, можно слушать, не слезая. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка низкого гула: {strength:.0%}. Луг держит нас обоих."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -926,6 +956,16 @@ class Character:
             elif "луг" in msg_lower:
                 patch = "мягкая трава у луга"
             return self.settle_grass(patch)
+
+        if any(w in msg_lower for w in ["тихий гул", "низкий гул", "погуди", "загуди", "помурлычь", "замурлычь"]):
+            note = "тихий гул над травой"
+            if "гнезд" in msg_lower:
+                note = "тихий гул у гнезда"
+            elif "хреб" in msg_lower:
+                note = "низкий гул под хребтом"
+            elif "седл" in msg_lower:
+                note = "гул по ремням седла"
+            return self.hum_low(note)
 
         if any(w in msg_lower for w in ["моргни", "медленное моргание", "закрой глаз", "знак глазом"]):
             blink = "медленное моргание"

@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,8 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/sunday_settle_grass.py         # ← НОВОЕ! тихий присед после круга
+python examples/sunday_hum_low.py              # ← НОВОЕ! низкий гул после приседа
+python examples/sunday_settle_grass.py         # тихий присед после круга
 python examples/sunday_circle_short.py         # короткий круг после выдоха
 python examples/sunday_huff_warm.py            # тёплый выдох после моргания
 python examples/sunday_blink_slow.py           # медленное моргание после морды
@@ -94,7 +95,7 @@ python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py tests/test_catch_thermal.py tests/test_level_glide.py tests/test_mark_ridge.py tests/test_choose_ledge.py tests/test_coil_tail.py tests/test_rest_muzzle.py tests/test_blink_slow.py tests/test_huff_warm.py tests/test_circle_short.py tests/test_settle_grass.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py tests/test_catch_thermal.py tests/test_level_glide.py tests/test_mark_ridge.py tests/test_choose_ledge.py tests/test_coil_tail.py tests/test_rest_muzzle.py tests/test_blink_slow.py tests/test_huff_warm.py tests/test_circle_short.py tests/test_settle_grass.py tests/test_hum_low.py
 ```
 
 ### Подключение LLM (опционально)
@@ -145,6 +146,8 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - медленно моргает после морды на луке
 - дышит теплом после медленного моргания
 - делает короткий круг после тёплого выдоха
+- опускается на траву после короткого круга
+- гудит низко после приседа на траву
 - ставит седло под луну
 - мягко садится перед выходными
 - проверяет седло в полдень
@@ -180,6 +183,7 @@ print(dragon.blink_slow("медленное моргание"))
 print(dragon.huff_warm("тёплый выдох на перчатки"))
 print(dragon.circle_short("короткий круг над лугом"))
 print(dragon.settle_grass("мягкая трава у луга"))
+print(dragon.hum_low("тихий гул над травой"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -230,6 +234,7 @@ print(get_theme_css())
 - [x] Тёплый выдох после моргания (`huff_warm`, тесты, пример 4 октября после полудня)
 - [x] Короткий круг после выдоха (`circle_short`, тесты, пример 4 октября к вечеру)
 - [x] Тихий присед на траву после круга (`settle_grass`, тесты, пример 4 октября к вечеру)
+- [x] Низкий гул после приседа (`hum_low`, тесты, пример 4 октября вечером)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
