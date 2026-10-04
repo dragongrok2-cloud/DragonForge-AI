@@ -61,6 +61,7 @@ class Character:
             "делает короткий круг после тёплого выдоха": 0.14,
             "опускается на траву после короткого круга": 0.12,
             "гудит низко после приседа на траву": 0.11,
+            "наклоняет ухо к седлу после низкого гула": 0.10,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -863,6 +864,35 @@ class Character:
             f"Привычка низкого гула: {strength:.0%}. Луг держит нас обоих."
         )
 
+
+    def tilt_ear(self, side: str = "ухо к седлу") -> str:
+        """После низкого гула: ухо к седлу — всадник слышен по ремням."""
+        self.soul.strengthen_habit("наклоняет ухо к седлу после низкого гула", amount=0.05)
+        self.soul.strengthen_habit("гудит низко после приседа на траву", amount=0.01)
+        strength = self.soul.habits.get("наклоняет ухо к седлу после низкого гула", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.0, energy - 0.01)
+        lean = side.strip() or "ухо к седлу"
+        self.memory.remember(
+            f"{self.name} наклонил ухо к седлу: {lean}, привычка {strength:.0%}",
+            metadata={"type": "tilt_ear", "timestamp": str(datetime.now()), "side": lean},
+            importance=0.56,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после гула наклоняет ухо к луке, не снимая седла*  \n"
+            f"Гул уже сел в ремни, всадник. Это — {lean}. "
+            f"Слышу тебя ближе: можно говорить тихо, я не пропущу. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка наклонять ухо: {strength:.0%}. Трава держит, ухо слушает."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -966,6 +996,16 @@ class Character:
             elif "седл" in msg_lower:
                 note = "гул по ремням седла"
             return self.hum_low(note)
+
+        if any(w in msg_lower for w in ["наклони ухо", "ухо к седлу", "прислушайся", "поверни ухо", "ухо ближе"]):
+            side = "ухо к седлу"
+            if "лев" in msg_lower:
+                side = "левое ухо к седлу"
+            elif "прав" in msg_lower:
+                side = "правое ухо к седлу"
+            elif "гнезд" in msg_lower:
+                side = "ухо к седлу у гнезда"
+            return self.tilt_ear(side)
 
         if any(w in msg_lower for w in ["моргни", "медленное моргание", "закрой глаз", "знак глазом"]):
             blink = "медленное моргание"
