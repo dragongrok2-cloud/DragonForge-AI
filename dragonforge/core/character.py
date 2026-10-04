@@ -58,6 +58,7 @@ class Character:
             "кладет морду на луку после хвоста": 0.16,
             "медленно моргает после морды на луке": 0.15,
             "дышит теплом после медленного моргания": 0.14,
+            "делает короткий круг после тёплого выдоха": 0.13,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -775,6 +776,34 @@ class Character:
             f"Привычка дышать теплом: {strength:.0%}. Короткий круг подождёт ещё один вдох."
         )
 
+    def circle_short(self, loop: str = "короткий круг над лугом") -> str:
+        """После тёплого выдоха: короткий круг — седло помнит, что пальцы уже не стынут."""
+        self.soul.strengthen_habit("делает короткий круг после тёплого выдоха", amount=0.05)
+        self.soul.strengthen_habit("дышит теплом после медленного моргания", amount=0.01)
+        strength = self.soul.habits.get("делает короткий круг после тёплого выдоха", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        arc = loop.strip() or "короткий круг над лугом"
+        self.memory.remember(
+            f"{self.name} сделал короткий круг в седле: {arc}, привычка {strength:.0%}",
+            metadata={"type": "circle_short", "timestamp": str(datetime.now()), "loop": arc},
+            importance=0.56,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*поднимает морду с луки и описывает короткий круг, не спеша крыльями*  \n"
+            f"Перчатки уже тёплые, всадник. Это — {arc}. "
+            f"Пар ещё на пальцах: я здесь, можно смотреть вниз спокойно. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка короткого круга: {strength:.0%}. Гнездо подождёт, пока замкнём дугу."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -848,6 +877,16 @@ class Character:
             elif "запяст" in msg_lower:
                 breath = "тёплый выдох на запястья"
             return self.huff_warm(breath)
+
+        if any(w in msg_lower for w in ["короткий круг", "сделай круг", "опиши круг", "круг над", "замкни дугу"]):
+            loop = "короткий круг над лугом"
+            if "гнезд" in msg_lower:
+                loop = "короткий круг над гнездом"
+            elif "хреб" in msg_lower:
+                loop = "короткий круг над хребтом"
+            elif "луг" in msg_lower:
+                loop = "короткий круг над лугом"
+            return self.circle_short(loop)
 
         if any(w in msg_lower for w in ["моргни", "медленное моргание", "закрой глаз", "знак глазом"]):
             blink = "медленное моргание"
