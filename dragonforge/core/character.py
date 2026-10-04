@@ -56,6 +56,7 @@ class Character:
             "выбирает уступ после хребта": 0.18,
             "сворачивает хвост после уступа": 0.17,
             "кладет морду на луку после хвоста": 0.16,
+            "медленно моргает после морды на луке": 0.15,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -715,6 +716,35 @@ class Character:
             f"Привычка класть морду на луку: {strength:.0%}. Обопрись о гребень — я уже дремлю."
         )
 
+
+    def blink_slow(self, blink: str = "медленное моргание") -> str:
+        """После морды на луке: медленно моргнуть — седло знает, что я здесь."""
+        self.soul.strengthen_habit("медленно моргает после морды на луке", amount=0.05)
+        self.soul.strengthen_habit("кладет морду на луку после хвоста", amount=0.01)
+        strength = self.soul.habits.get("медленно моргает после морды на луке", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.2, energy - 0.01)
+        sign = blink.strip() or "медленное моргание"
+        self.memory.remember(
+            f"{self.name} моргнул в седле: {sign}, привычка {strength:.0%}",
+            metadata={"type": "blink_slow", "timestamp": str(datetime.now()), "blink": sign},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*медленно опускает веко и снова открывает глаз, не снимая морды с луки*  \n"
+            f"Морда уже на седле, всадник. Это — {sign}. "
+            f"Один глаз закрылся, второй стережёт ремни: я здесь, можно опереться. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка медленно моргать: {strength:.0%}. Короткий круг подождёт ещё немного."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -778,6 +808,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["моргни", "медленное моргание", "закрой глаз", "знак глазом"]):
+            blink = "медленное моргание"
+            if "два" in msg_lower:
+                blink = "два медленных моргания"
+            elif "лев" in msg_lower:
+                blink = "моргание левым глазом"
+            elif "оба" in msg_lower:
+                blink = "оба глаза на миг"
+            return self.blink_slow(blink)
 
         if any(w in msg_lower for w in ["положи морду", "морда на лук", "подбородок на седло", "усни на луке"]):
             rest = "морда на луке"
