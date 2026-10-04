@@ -57,6 +57,7 @@ class Character:
             "сворачивает хвост после уступа": 0.17,
             "кладет морду на луку после хвоста": 0.16,
             "медленно моргает после морды на луке": 0.15,
+            "дышит теплом после медленного моргания": 0.14,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -745,6 +746,35 @@ class Character:
             f"Привычка медленно моргать: {strength:.0%}. Короткий круг подождёт ещё немного."
         )
 
+
+    def huff_warm(self, breath: str = "тёплый выдох на перчатки") -> str:
+        """После медленного моргания: тёплый выдох на перчатки — седло помнит дыхание."""
+        self.soul.strengthen_habit("дышит теплом после медленного моргания", amount=0.05)
+        self.soul.strengthen_habit("медленно моргает после морды на луке", amount=0.01)
+        strength = self.soul.habits.get("дышит теплом после медленного моргания", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.01)
+        puff = breath.strip() or "тёплый выдох на перчатки"
+        self.memory.remember(
+            f"{self.name} дыхнул теплом в седле: {puff}, привычка {strength:.0%}",
+            metadata={"type": "huff_warm", "timestamp": str(datetime.now()), "breath": puff},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*тихо выдыхает тёплый клуб пара прямо на перчатки, не поднимая морды с луки*  \n"
+            f"Веко уже поднялось, всадник. Это — {puff}. "
+            f"Пальцы не стынут: я здесь, можно держать поводья спокойно. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка дышать теплом: {strength:.0%}. Короткий круг подождёт ещё один вдох."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -808,6 +838,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["подыши", "тёплый выдох", "теплый выдох", "грей перчат", "выдохни", "фыркни тепло"]):
+            breath = "тёплый выдох на перчатки"
+            if "ладон" in msg_lower:
+                breath = "тёплый выдох на ладони"
+            elif "повод" in msg_lower:
+                breath = "тёплый выдох на поводья"
+            elif "запяст" in msg_lower:
+                breath = "тёплый выдох на запястья"
+            return self.huff_warm(breath)
 
         if any(w in msg_lower for w in ["моргни", "медленное моргание", "закрой глаз", "знак глазом"]):
             blink = "медленное моргание"
