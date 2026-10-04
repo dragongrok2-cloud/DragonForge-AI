@@ -62,6 +62,7 @@ class Character:
             "опускается на траву после короткого круга": 0.12,
             "гудит низко после приседа на траву": 0.11,
             "наклоняет ухо к седлу после низкого гула": 0.10,
+            "прижимает щеку к колену после наклона уха": 0.09,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -893,6 +894,35 @@ class Character:
             f"Привычка наклонять ухо: {strength:.0%}. Трава держит, ухо слушает."
         )
 
+
+    def nuzzle_knee(self, touch: str = "щека к колену") -> str:
+        """После наклона уха: щека к колену — всадник слышен кожей, не только ремнями."""
+        self.soul.strengthen_habit("прижимает щеку к колену после наклона уха", amount=0.05)
+        self.soul.strengthen_habit("наклоняет ухо к седлу после низкого гула", amount=0.01)
+        strength = self.soul.habits.get("прижимает щеку к колену после наклона уха", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = max(0.0, energy - 0.01)
+        press = touch.strip() or "щека к колену"
+        self.memory.remember(
+            f"{self.name} прижал щеку к колену: {press}, привычка {strength:.0%}",
+            metadata={"type": "nuzzle_knee", "timestamp": str(datetime.now()), "touch": press},
+            importance=0.57,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после наклона уха тихо прижимает тёплую щеку к колену, не снимая седла*  \n"
+            f"Ухо уже слышит ремни, всадник. Это — {press}. "
+            f"Так я отвечаю кожей: ты рядом, можно молчать или говорить шёпотом. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка прижимать щеку: {strength:.0%}. Трава держит, щека греет колено."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -996,6 +1026,16 @@ class Character:
             elif "седл" in msg_lower:
                 note = "гул по ремням седла"
             return self.hum_low(note)
+
+        if any(w in msg_lower for w in ["щека к колен", "прижми щеку", "потрись щекой", "носом к колен", "щекой к колен"]):
+            touch = "щека к колену"
+            if "лев" in msg_lower:
+                touch = "щека к левому колену"
+            elif "прав" in msg_lower:
+                touch = "щека к правому колену"
+            elif "гнезд" in msg_lower:
+                touch = "щека к колену у гнезда"
+            return self.nuzzle_knee(touch)
 
         if any(w in msg_lower for w in ["наклони ухо", "ухо к седлу", "прислушайся", "поверни ухо", "ухо ближе"]):
             side = "ухо к седлу"
