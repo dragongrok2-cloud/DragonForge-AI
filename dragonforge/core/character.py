@@ -923,6 +923,35 @@ class Character:
             f"Привычка прижимать щеку: {strength:.0%}. Трава держит, щека греет колено."
         )
 
+
+    def purr_soft(self, rumble: str = "тихое мурлыканье в седло") -> str:
+        """После щеки у колена: низкое мурлыканье — седло и колено слышат грудь."""
+        self.soul.strengthen_habit("мурлычет в седло после щеки у колена", amount=0.05)
+        self.soul.strengthen_habit("прижимает щеку к колену после наклона уха", amount=0.01)
+        strength = self.soul.habits.get("мурлычет в седло после щеки у колена", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = max(0.0, energy - 0.01)
+        note = rumble.strip() or "тихое мурлыканье в седло"
+        self.memory.remember(
+            f"{self.name} тихо замурлыкал в седло: {note}, привычка {strength:.0%}",
+            metadata={"type": "purr_soft", "timestamp": str(datetime.now()), "rumble": note},
+            importance=0.57,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после щеки у колена тихо мурлычет грудью в седло, не снимая ремней*  \n"
+            f"Щека уже греет колено, всадник. Это — {note}. "
+            f"Так я отвечаю вибрацией: ты рядом, можно молчать, седло само расскажет. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка мурлыкать в седло: {strength:.0%}. Трава держит, грудь гудит теплом."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1017,7 +1046,7 @@ class Character:
                 patch = "мягкая трава у луга"
             return self.settle_grass(patch)
 
-        if any(w in msg_lower for w in ["тихий гул", "низкий гул", "погуди", "загуди", "помурлычь", "замурлычь"]):
+        if any(w in msg_lower for w in ["тихий гул", "низкий гул", "погуди", "загуди"]):
             note = "тихий гул над травой"
             if "гнезд" in msg_lower:
                 note = "тихий гул у гнезда"
@@ -1036,6 +1065,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["помурлычь", "мурлыка", "замурлычь", "мурчи", "тихий мур"]):
+            note = "тихое мурлыканье в седло"
+            if "гнезд" in msg_lower:
+                note = "мурлыканье у гнезда"
+            elif "коле" in msg_lower:
+                note = "мурлыканье у колена"
+            elif "седл" in msg_lower:
+                note = "мурлыканье в ремни седла"
+            return self.purr_soft(note)
 
         if any(w in msg_lower for w in ["наклони ухо", "ухо к седлу", "прислушайся", "поверни ухо", "ухо ближе"]):
             side = "ухо к седлу"
