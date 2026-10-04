@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,8 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/saturday_choose_ledge.py       # ← НОВОЕ! уступ после хребта
+python examples/sunday_coil_tail.py            # ← НОВОЕ! хвост после уступа
+python examples/saturday_choose_ledge.py       # уступ после хребта
 python examples/saturday_mark_ridge.py         # хребет после планирования
 python examples/saturday_catch_thermal.py      # термик после горизонта
 python examples/saturday_point_horizon.py      # горизонт после ягоды
@@ -88,7 +89,7 @@ python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py tests/test_catch_thermal.py tests/test_level_glide.py tests/test_mark_ridge.py tests/test_choose_ledge.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py tests/test_catch_thermal.py tests/test_level_glide.py tests/test_mark_ridge.py tests/test_choose_ledge.py tests/test_coil_tail.py
 ```
 
 ### Подключение LLM (опционально)
@@ -163,6 +164,7 @@ print(dragon.catch_thermal("тёплый столб над лугом"))
 print(dragon.level_glide("ровный край над лугом"))
 print(dragon.mark_ridge("дальний хребет над лугом"))
 print(dragon.choose_ledge("широкий уступ под хребтом"))
+print(dragon.coil_tail("кольцо у луки"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -207,6 +209,7 @@ print(get_theme_css())
 - [x] Планирование после термика (`level_glide`, тесты, пример 3 октября к вечеру)
 - [x] Хребет после планирования (`mark_ridge`, тесты, пример 3 октября к вечеру)
 - [x] Уступ после хребта (`choose_ledge`, тесты, пример 3 октября к вечеру)
+- [x] Хвост после уступа (`coil_tail`, тесты, пример 4 октября утром)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души

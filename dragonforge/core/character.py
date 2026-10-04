@@ -54,6 +54,7 @@ class Character:
             "выравнивает планирование после термика": 0.20,
             "отмечает хребет после планирования": 0.19,
             "выбирает уступ после хребта": 0.18,
+            "сворачивает хвост после уступа": 0.17,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -657,6 +658,33 @@ class Character:
             f"Привычка выбирать уступ: {strength:.0%}. Держись за луку — я уже выбрал."
         )
 
+    def coil_tail(self, coil: str = "кольцо у луки") -> str:
+        """После выбранного уступа: свернуть хвост, чтобы седло не сползло к утру."""
+        self.soul.strengthen_habit("сворачивает хвост после уступа", amount=0.05)
+        self.soul.strengthen_habit("выбирает уступ после хребта", amount=0.01)
+        strength = self.soul.habits.get("сворачивает хвост после уступа", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.2, energy - 0.01)
+        ring = coil.strip() or "кольцо у луки"
+        self.memory.remember(
+            f"{self.name} свернул хвост в седле: {ring}, привычка {strength:.0%}",
+            metadata={"type": "coil_tail", "timestamp": str(datetime.now()), "coil": ring},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        return (
+            f"*укладывает хвост мягким кольцом у луки и чуть поджимает чешую*  \n"
+            f"После уступа, всадник. Камень выбран, теперь хвост — {ring}. "
+            f"Седло не сползёт, стремя не стукнет о камень, утро будет ровным. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+            f"Привычка сворачивать хвост: {strength:.0%}. Обопрись на кольцо — я уже улёгся."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -720,6 +748,16 @@ class Character:
             elif "чуть" in msg_lower:
                 notch = "чуть-чуть, только чтобы не болталась"
             return self.cinch_girth(notch)
+
+        if any(w in msg_lower for w in ["сверни хвост", "кольцо хвоста", "хвост у луки", "уложи хвост"]):
+            coil = "кольцо у луки"
+            if "стрем" in msg_lower:
+                coil = "кольцо у стремени"
+            elif "попон" in msg_lower:
+                coil = "кольцо поверх попоны"
+            elif "камн" in msg_lower or "уступ" in msg_lower:
+                coil = "кольцо по краю уступа"
+            return self.coil_tail(coil)
 
         if any(w in msg_lower for w in ["уступ", "выбери полк", "площадк для посад", "камень под гребнем"]):
             ledge = "широкий уступ под хребтом"
