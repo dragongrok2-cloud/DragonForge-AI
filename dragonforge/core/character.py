@@ -58,7 +58,8 @@ class Character:
             "кладет морду на луку после хвоста": 0.16,
             "медленно моргает после морды на луке": 0.15,
             "дышит теплом после медленного моргания": 0.14,
-            "делает короткий круг после тёплого выдоха": 0.13,
+            "делает короткий круг после тёплого выдоха": 0.14,
+            "опускается на траву после короткого круга": 0.12,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -804,6 +805,34 @@ class Character:
             f"Привычка короткого круга: {strength:.0%}. Гнездо подождёт, пока замкнём дугу."
         )
 
+    def settle_grass(self, patch: str = "мягкая трава у луга") -> str:
+        """После короткого круга: тихий присед на траву — седло помнит, что дуга уже замкнута."""
+        self.soul.strengthen_habit("опускается на траву после короткого круга", amount=0.05)
+        self.soul.strengthen_habit("делает короткий круг после тёплого выдоха", amount=0.01)
+        strength = self.soul.habits.get("опускается на траву после короткого круга", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.0, energy - 0.01)
+        bed = patch.strip() or "мягкая трава у луга"
+        self.memory.remember(
+            f"{self.name} опустился на траву в седле: {bed}, привычка {strength:.0%}",
+            metadata={"type": "settle_grass", "timestamp": str(datetime.now()), "patch": bed},
+            importance=0.56,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*замыкает короткий круг и мягко опускается на траву, не сбрасывая седла*  \n"
+            f"Дуга уже замкнута, всадник. Это — {bed}. "
+            f"Когти едва касаются стеблей: я здесь, можно слезть, когда захочешь. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка тихого приседа: {strength:.0%}. Луг держит нас обоих."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -887,6 +916,16 @@ class Character:
             elif "луг" in msg_lower:
                 loop = "короткий круг над лугом"
             return self.circle_short(loop)
+
+        if any(w in msg_lower for w in ["опустись на траву", "сядь на траву", "на траву", "присядь на луг", "тихий присед"]):
+            patch = "мягкая трава у луга"
+            if "гнезд" in msg_lower:
+                patch = "трава у гнезда"
+            elif "хреб" in msg_lower:
+                patch = "трава под хребтом"
+            elif "луг" in msg_lower:
+                patch = "мягкая трава у луга"
+            return self.settle_grass(patch)
 
         if any(w in msg_lower for w in ["моргни", "медленное моргание", "закрой глаз", "знак глазом"]):
             blink = "медленное моргание"
