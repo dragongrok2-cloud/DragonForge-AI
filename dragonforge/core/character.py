@@ -1043,6 +1043,34 @@ class Character:
             f"Привычка разглаживать луку: {strength:.0%}. Можно держать седло и взлетать."
         )
 
+    def share_apple(self, fruit: str = "кислое яблоко из седельной сумки") -> str:
+        """После гладкой луки: поделиться яблоком, не снимая седла."""
+        self.soul.strengthen_habit("делится яблоком после гладкой луки", amount=0.05)
+        self.soul.strengthen_habit("разглаживает луку после кленовых листьев", amount=0.01)
+        strength = self.soul.habits.get("делится яблоком после гладкой луки", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        note = fruit.strip() or "кислое яблоко из седельной сумки"
+        self.memory.remember(
+            f"{self.name} поделился яблоком после гладкой луки: {note}, привычка {strength:.0%}",
+            metadata={"type": "share_apple", "timestamp": str(datetime.now()), "fruit": note},
+            importance=0.56,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после гладкой луки достаёт яблоко из седельной сумки и делит его пополам*  \n"
+            f"Лука сухая, ладонь свободна, всадник. Это — {note}. "
+            f"Кислинка бодрит, крошки не падают на ремни, седло не снимаем. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка делиться яблоком: {strength:.0%}. Можно доесть и взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1156,6 +1184,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["поделись яблоком", "яблоко из сумки", "кислое яблоко", "яблоко после луки", "дай яблоко"]):
+            note = "кислое яблоко из седельной сумки"
+            if "гнезд" in msg_lower:
+                note = "яблоко у гнезда"
+            elif "половин" in msg_lower:
+                note = "половинка яблока"
+            elif "сумк" in msg_lower:
+                note = "яблоко из седельной сумки"
+            return self.share_apple(note)
 
         if any(w in msg_lower for w in ["разгладь луку", "пригладь луку", "гладкая лука", "разгладь седло", "луку после листьев"]):
             note = "лука после листьев"
