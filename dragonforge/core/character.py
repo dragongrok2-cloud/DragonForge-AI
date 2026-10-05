@@ -1071,6 +1071,34 @@ class Character:
             f"Привычка делиться яблоком: {strength:.0%}. Можно доесть и взлетать."
         )
 
+    def wipe_juice(self, spot: str = "сок с луки после яблока") -> str:
+        """После яблока: вытереть сок с луки крылом, не снимая седла."""
+        self.soul.strengthen_habit("вытирает сок с луки после яблока", amount=0.05)
+        self.soul.strengthen_habit("делится яблоком после гладкой луки", amount=0.01)
+        strength = self.soul.habits.get("вытирает сок с луки после яблока", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.01)
+        note = spot.strip() or "сок с луки после яблока"
+        self.memory.remember(
+            f"{self.name} вытер сок с луки после яблока: {note}, привычка {strength:.0%}",
+            metadata={"type": "wipe_juice", "timestamp": str(datetime.now()), "spot": note},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после яблока краем крыла вытирает липкий сок с луки*  \n"
+            f"Кислинка уже съедена, всадник. Это — {note}. "
+            f"Кожа снова сухая, ладонь не липнет, ремни не трогаем. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка вытирать сок: {strength:.0%}. Можно держать седло и взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1184,6 +1212,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["вытри сок", "сок с луки", "яблочный сок", "вытри луку после", "после яблока вытри"]):
+            note = "сок с луки после яблока"
+            if "гнезд" in msg_lower:
+                note = "сок у гнезда"
+            elif "стрем" in msg_lower:
+                note = "сок со стремени"
+            elif "крыл" in msg_lower:
+                note = "сок, снятый крылом"
+            return self.wipe_juice(note)
 
         if any(w in msg_lower for w in ["поделись яблоком", "яблоко из сумки", "кислое яблоко", "яблоко после луки", "дай яблоко"]):
             note = "кислое яблоко из седельной сумки"

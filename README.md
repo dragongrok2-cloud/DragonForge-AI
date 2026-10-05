@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,8 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/monday_share_apple.py            # ← НОВОЕ! яблоко после луки
+python examples/monday_wipe_juice.py             # ← НОВОЕ! сок с луки после яблока
+python examples/monday_share_apple.py            # яблоко после луки
 python examples/monday_smooth_pommel.py          # лука после листьев
 python examples/monday_shake_leaves.py           # кленовые листья с седла
 python examples/monday_stretch_neck.py           # потяжка шеи после мурлыканья
@@ -102,7 +103,7 @@ python examples/midday_saddle_check.py
 python examples/friday_soft_landing.py
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py tests/test_catch_thermal.py tests/test_level_glide.py tests/test_mark_ridge.py tests/test_choose_ledge.py tests/test_coil_tail.py tests/test_rest_muzzle.py tests/test_blink_slow.py tests/test_huff_warm.py tests/test_circle_short.py tests/test_settle_grass.py tests/test_hum_low.py tests/test_tilt_ear.py tests/test_nuzzle_knee.py tests/test_purr_soft.py tests/test_stretch_neck.py tests/test_shake_leaves.py tests/test_smooth_pommel.py tests/test_share_apple.py
+pytest tests/test_soft_landing.py tests/test_saddle_check.py tests/test_wing_fold.py tests/test_share_pebble.py tests/test_pour_thermos.py tests/test_offer_shade.py tests/test_light_lantern.py tests/test_name_constellation.py tests/test_bank_home.py tests/test_brush_dew.py tests/test_cinch_girth.py tests/test_adjust_stirrup.py tests/test_warm_reins.py tests/test_share_cloudberry.py tests/test_point_horizon.py tests/test_catch_thermal.py tests/test_level_glide.py tests/test_mark_ridge.py tests/test_choose_ledge.py tests/test_coil_tail.py tests/test_rest_muzzle.py tests/test_blink_slow.py tests/test_huff_warm.py tests/test_circle_short.py tests/test_settle_grass.py tests/test_hum_low.py tests/test_tilt_ear.py tests/test_nuzzle_knee.py tests/test_purr_soft.py tests/test_stretch_neck.py tests/test_shake_leaves.py tests/test_smooth_pommel.py tests/test_share_apple.py tests/test_wipe_juice.py
 ```
 
 ### Подключение LLM (опционально)
@@ -202,6 +203,7 @@ print(dragon.stretch_neck("тихая потяжка шеи над седлом"
 print(dragon.shake_leaves("кленовый лист с луки"))
 print(dragon.smooth_pommel("лука после листьев"))
 print(dragon.share_apple("кислое яблоко из седельной сумки"))
+print(dragon.wipe_juice("сок с луки после яблока"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -260,6 +262,7 @@ print(get_theme_css())
 - [x] Кленовые листья после потяжки (`shake_leaves`, тесты, пример 5 октября позднее утро)
 - [x] Лука после листьев (`smooth_pommel`, тесты, пример 5 октября к полудню)
 - [x] Яблоко после луки (`share_apple`, тесты, пример 5 октября в полдень)
+- [x] Сок с луки после яблока (`wipe_juice`, тесты, пример 5 октября после полудня)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
