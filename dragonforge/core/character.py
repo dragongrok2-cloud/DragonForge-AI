@@ -65,6 +65,7 @@ class Character:
             "прижимает щеку к колену после наклона уха": 0.09,
             "мурлычет в седло после щеки у колена": 0.08,
             "тянет шею после тихого мурлыканья": 0.07,
+            "стряхивает кленовые листья после потяжки шеи": 0.06,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -983,6 +984,35 @@ class Character:
             f"Привычка тянуть шею: {strength:.0%}. Ремни на месте, я никуда не денусь."
         )
 
+
+    def shake_leaves(self, leaf: str = "кленовый лист с луки") -> str:
+        """После потяжки шеи: стряхнуть осенние листья с седла, не снимая ремней."""
+        self.soul.strengthen_habit("стряхивает кленовые листья после потяжки шеи", amount=0.05)
+        self.soul.strengthen_habit("тянет шею после тихого мурлыканья", amount=0.01)
+        strength = self.soul.habits.get("стряхивает кленовые листья после потяжки шеи", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.03)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.01)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        note = leaf.strip() or "кленовый лист с луки"
+        self.memory.remember(
+            f"{self.name} стряхнул кленовые листья после потяжки: {note}, привычка {strength:.0%}",
+            metadata={"type": "shake_leaves", "timestamp": str(datetime.now()), "leaf": note},
+            importance=0.56,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после потяжки шеи тихо встряхивает крыльями и смахивает листья с луки*  \n"
+            f"Утро уже рыжее, всадник. Это — {note}. "
+            f"Листья улетают в сторону, седло остаётся тёплым и сухим. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка стряхивать листья: {strength:.0%}. Ремни на месте, можно взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1096,6 +1126,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["стряхни листья", "кленовые листья", "листья с седла", "осенние листья", "стряхни кленовые"]):
+            note = "кленовый лист с луки"
+            if "гнезд" in msg_lower:
+                note = "кленовый лист у гнезда"
+            elif "стрем" in msg_lower:
+                note = "кленовый лист со стремени"
+            elif "седл" in msg_lower:
+                note = "кленовый лист с седла"
+            return self.shake_leaves(note)
 
         if any(w in msg_lower for w in ["потяни шею", "потяжка шеи", "вытяни шею", "шею над седлом", "потянись шеей"]):
             note = "тихая потяжка шеи над седлом"
