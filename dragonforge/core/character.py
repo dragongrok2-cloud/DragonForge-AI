@@ -67,6 +67,10 @@ class Character:
             "тянет шею после тихого мурлыканья": 0.07,
             "стряхивает кленовые листья после потяжки шеи": 0.06,
             "разглаживает луку после кленовых листьев": 0.05,
+            "делится яблоком после гладкой луки": 0.05,
+            "вытирает сок с луки после яблока": 0.04,
+            "сушит край крыла после сока": 0.04,
+            "подгибает кончик крыла после сушки": 0.03,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -1127,6 +1131,35 @@ class Character:
             f"Привычка сушить край крыла: {strength:.0%}. Можно держать седло и взлетать."
         )
 
+
+    def tuck_tip(self, tip: str = "кончик крыла после сушки") -> str:
+        """После сушки края: подогнуть кончик крыла к седлу, не снимая ремней."""
+        self.soul.strengthen_habit("подгибает кончик крыла после сушки", amount=0.05)
+        self.soul.strengthen_habit("сушит край крыла после сока", amount=0.01)
+        strength = self.soul.habits.get("подгибает кончик крыла после сушки", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.01)
+        note = tip.strip() or "кончик крыла после сушки"
+        self.memory.remember(
+            f"{self.name} подогнул кончик крыла после сушки: {note}, привычка {strength:.0%}",
+            metadata={"type": "tuck_tip", "timestamp": str(datetime.now()), "tip": note},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после сухой травы подгибает кончик крыла к луке*  \n"
+            f"Край уже сухой, всадник. Это — {note}. "
+            f"Кончик не ловит ветер, седло не снимаем, ремни на месте. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка подгибать кончик: {strength:.0%}. Можно держать седло и взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1240,6 +1273,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["подогни кончик", "подгни кончик", "кончик крыла", "подогни крыло", "кончик после сушки"]):
+            note = "кончик крыла после сушки"
+            if "гнезд" in msg_lower:
+                note = "кончик крыла у гнезда"
+            elif "стрем" in msg_lower:
+                note = "кончик крыла у стремени"
+            elif "лук" in msg_lower:
+                note = "кончик крыла к луке"
+            return self.tuck_tip(note)
 
         if any(w in msg_lower for w in ["высуши крыло", "суши край крыла", "край крыла после", "просуши крыло", "крыло после сока"]):
             note = "край крыла после сока"
