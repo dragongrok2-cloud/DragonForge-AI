@@ -72,6 +72,7 @@ class Character:
             "сушит край крыла после сока": 0.04,
             "подгибает кончик крыла после сушки": 0.03,
             "закрепляет кончик крыла после подгиба": 0.03,
+            "накрывает чешуйку после закрепления": 0.02,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -1189,6 +1190,35 @@ class Character:
             f"Привычка закреплять кончик: {strength:.0%}. Можно держать седло и сидеть спокойно."
         )
 
+
+    def cover_pin(self, place: str = "ладонь на чешуйке после закрепления") -> str:
+        """После закрепления: накрыть чешуйку ладонью, не снимая седла."""
+        self.soul.strengthen_habit("накрывает чешуйку после закрепления", amount=0.05)
+        self.soul.strengthen_habit("закрепляет кончик крыла после подгиба", amount=0.01)
+        strength = self.soul.habits.get("накрывает чешуйку после закрепления", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+        self.soul.emotional_state["energy"] = max(0.2, energy - 0.01)
+        note = place.strip() or "ладонь на чешуйке после закрепления"
+        self.memory.remember(
+            f"{self.name} накрыл чешуйку ладонью после закрепления: {note}, привычка {strength:.0%}",
+            metadata={"type": "cover_pin", "timestamp": str(datetime.now()), "place": note},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после закрепления кладёт ладонь на мягкую чешуйку у луки*  \n"
+            f"Чешуйка уже держит кончик, всадник. Это — {note}. "
+            f"Ночной ветер не поднимет край, седло не снимаем, ремни на месте. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка накрывать чешуйку: {strength:.0%}. Можно держать седло и сидеть тихо."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1302,6 +1332,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["накрой чешуй", "ладонь на чешуй", "прикрой кончик", "чешуйка после закреп", "после закрепления накрой"]):
+            note = "ладонь на чешуйке после закрепления"
+            if "гнезд" in msg_lower:
+                note = "ладонь на чешуйке у гнезда"
+            elif "стрем" in msg_lower:
+                note = "ладонь на чешуйке у стремени"
+            elif "лук" in msg_lower:
+                note = "ладонь на чешуйке у луки"
+            return self.cover_pin(note)
 
         if any(w in msg_lower for w in ["закрепи кончик", "приколи кончик", "кончик к луке закрепи", "булавка на кончик", "кончик после подгиба"]):
             note = "кончик у луки после подгиба"
