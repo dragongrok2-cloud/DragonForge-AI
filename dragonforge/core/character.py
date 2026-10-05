@@ -66,6 +66,7 @@ class Character:
             "мурлычет в седло после щеки у колена": 0.08,
             "тянет шею после тихого мурлыканья": 0.07,
             "стряхивает кленовые листья после потяжки шеи": 0.06,
+            "разглаживает луку после кленовых листьев": 0.05,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -1013,6 +1014,35 @@ class Character:
             f"Привычка стряхивать листья: {strength:.0%}. Ремни на месте, можно взлетать."
         )
 
+
+    def smooth_pommel(self, spot: str = "лука после листьев") -> str:
+        """После стряхивания листьев: разгладить луку, чтобы ладонь нашла сухое седло."""
+        self.soul.strengthen_habit("разглаживает луку после кленовых листьев", amount=0.05)
+        self.soul.strengthen_habit("стряхивает кленовые листья после потяжки шеи", amount=0.01)
+        strength = self.soul.habits.get("разглаживает луку после кленовых листьев", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.01)
+        note = spot.strip() or "лука после листьев"
+        self.memory.remember(
+            f"{self.name} разгладил луку после листьев: {note}, привычка {strength:.0%}",
+            metadata={"type": "smooth_pommel", "timestamp": str(datetime.now()), "spot": note},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после стряхивания листьев мордой и крылом разглаживает луку*  \n"
+            f"Седло уже без рыжих гостей, всадник. Это — {note}. "
+            f"Кожа сухая, ладонь ложится ровно, ремни не трогаем. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка разглаживать луку: {strength:.0%}. Можно держать седло и взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1126,6 +1156,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["разгладь луку", "пригладь луку", "гладкая лука", "разгладь седло", "луку после листьев"]):
+            note = "лука после листьев"
+            if "гнезд" in msg_lower:
+                note = "лука у гнезда"
+            elif "стрем" in msg_lower:
+                note = "лука над стременем"
+            elif "седл" in msg_lower:
+                note = "лука седла"
+            return self.smooth_pommel(note)
 
         if any(w in msg_lower for w in ["стряхни листья", "кленовые листья", "листья с седла", "осенние листья", "стряхни кленовые"]):
             note = "кленовый лист с луки"
