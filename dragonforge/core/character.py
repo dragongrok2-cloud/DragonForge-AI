@@ -1099,6 +1099,34 @@ class Character:
             f"Привычка вытирать сок: {strength:.0%}. Можно держать седло и взлетать."
         )
 
+    def dry_wing(self, edge: str = "край крыла после сока") -> str:
+        """После сока на луке: просушить край крыла, не снимая седла."""
+        self.soul.strengthen_habit("сушит край крыла после сока", amount=0.05)
+        self.soul.strengthen_habit("вытирает сок с луки после яблока", amount=0.01)
+        strength = self.soul.habits.get("сушит край крыла после сока", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.01)
+        note = edge.strip() or "край крыла после сока"
+        self.memory.remember(
+            f"{self.name} просушил край крыла после сока: {note}, привычка {strength:.0%}",
+            metadata={"type": "dry_wing", "timestamp": str(datetime.now()), "edge": note},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после сока на луке проводит краем крыла по сухой траве у стремени*  \n"
+            f"Лука уже чистая, всадник. Это — {note}. "
+            f"Перепонка больше не липнет, седло не снимаем, ремни на месте. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка сушить край крыла: {strength:.0%}. Можно держать седло и взлетать."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1212,6 +1240,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["высуши крыло", "суши край крыла", "край крыла после", "просуши крыло", "крыло после сока"]):
+            note = "край крыла после сока"
+            if "гнезд" in msg_lower:
+                note = "край крыла у гнезда"
+            elif "стрем" in msg_lower:
+                note = "край крыла у стремени"
+            elif "трав" in msg_lower:
+                note = "край крыла о сухую траву"
+            return self.dry_wing(note)
 
         if any(w in msg_lower for w in ["вытри сок", "сок с луки", "яблочный сок", "вытри луку после", "после яблока вытри"]):
             note = "сок с луки после яблока"
