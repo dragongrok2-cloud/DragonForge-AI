@@ -63,6 +63,8 @@ class Character:
             "гудит низко после приседа на траву": 0.11,
             "наклоняет ухо к седлу после низкого гула": 0.10,
             "прижимает щеку к колену после наклона уха": 0.09,
+            "мурлычет в седло после щеки у колена": 0.08,
+            "тянет шею после тихого мурлыканья": 0.07,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -952,6 +954,35 @@ class Character:
             f"Привычка мурлыкать в седло: {strength:.0%}. Трава держит, грудь гудит теплом."
         )
 
+
+    def stretch_neck(self, reach: str = "тихая потяжка шеи над седлом") -> str:
+        """После мурлыканья: шея тянется над седлом, чтобы утро не толкнуло всадника."""
+        self.soul.strengthen_habit("тянет шею после тихого мурлыканья", amount=0.05)
+        self.soul.strengthen_habit("мурлычет в седло после щеки у колена", amount=0.01)
+        strength = self.soul.habits.get("тянет шею после тихого мурлыканья", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.03)
+        note = reach.strip() or "тихая потяжка шеи над седлом"
+        self.memory.remember(
+            f"{self.name} потянул шею после мурлыканья: {note}, привычка {strength:.0%}",
+            metadata={"type": "stretch_neck", "timestamp": str(datetime.now()), "reach": note},
+            importance=0.57,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*после тихого мурлыканья медленно тянет шею над лукой, не снимая ремней*  \n"
+            f"Грудь ещё гудит, всадник. Это — {note}. "
+            f"Седло чуть поднимается, как подушка: утро можно встретить без рывка. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка тянуть шею: {strength:.0%}. Ремни на месте, я никуда не денусь."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1065,6 +1096,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["потяни шею", "потяжка шеи", "вытяни шею", "шею над седлом", "потянись шеей"]):
+            note = "тихая потяжка шеи над седлом"
+            if "утро" in msg_lower or "рассвет" in msg_lower:
+                note = "утренняя потяжка шеи"
+            elif "гнезд" in msg_lower:
+                note = "потяжка шеи у гнезда"
+            elif "седл" in msg_lower:
+                note = "потяжка шеи над седлом"
+            return self.stretch_neck(note)
 
         if any(w in msg_lower for w in ["помурлычь", "мурлыка", "замурлычь", "мурчи", "тихий мур"]):
             note = "тихое мурлыканье в седло"
