@@ -74,6 +74,7 @@ class Character:
             "закрепляет кончик крыла после подгиба": 0.03,
             "накрывает чешуйку после закрепления": 0.02,
             "прижимает ладонь после накрытия": 0.02,
+            "поднимает ладонь после нажатия": 0.02,
         },
         emotional_state={"joy": 0.7, "trust": 0.8, "energy": 0.6, "curiosity": 0.75}
     ))
@@ -1249,6 +1250,35 @@ class Character:
             f"Привычка прижимать ладонь: {strength:.0%}. Можно держать седло и сидеть тихо."
         )
 
+
+    def lift_palm(self, place: str = "ладонь после ночного нажатия") -> str:
+        """Утром после нажатия: поднять ладонь с чешуйки, не снимая седла."""
+        self.soul.strengthen_habit("поднимает ладонь после нажатия", amount=0.05)
+        self.soul.strengthen_habit("прижимает ладонь после накрытия", amount=0.01)
+        strength = self.soul.habits.get("поднимает ладонь после нажатия", 0.0)
+        joy = self.soul.emotional_state.get("joy", 0.5)
+        trust = self.soul.emotional_state.get("trust", 0.5)
+        energy = self.soul.emotional_state.get("energy", 0.5)
+        self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+        self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+        self.soul.emotional_state["energy"] = min(1.0, energy + 0.02)
+        note = place.strip() or "ладонь после ночного нажатия"
+        self.memory.remember(
+            f"{self.name} поднял ладонь с чешуйки после нажатия: {note}, привычка {strength:.0%}",
+            metadata={"type": "lift_palm", "timestamp": str(datetime.now()), "place": note},
+            importance=0.55,
+        )
+        joy_after = self.soul.emotional_state["joy"]
+        trust_after = self.soul.emotional_state["trust"]
+        energy_after = self.soul.emotional_state["energy"]
+        return (
+            f"*утром мягко поднимает ладонь с чешуйки у луки, край остаётся на месте*  \n"
+            f"Ночное нажатие сделало своё, всадник. Это — {note}. "
+            f"Ладонь уходит, роса не клеит чешуйку, край не поднимает ветер. Седло не снимаем, ремни на месте. "
+            f"Радость {joy_after:.2f}, доверие {trust_after:.2f}, энергия {energy_after:.2f}. "
+            f"Привычка поднимать ладонь: {strength:.0%}. Можно держать седло и встречать утро."
+        )
+
     def _generate_simple_response(self, message: str, memories: Any) -> str:
         """Простая генерация ответа без внешнего LLM. Учитывает сильные привычки."""
         msg_lower = message.lower()
@@ -1362,6 +1392,16 @@ class Character:
             elif "гнезд" in msg_lower:
                 touch = "щека к колену у гнезда"
             return self.nuzzle_knee(touch)
+
+        if any(w in msg_lower for w in ["подними ладонь", "ладонь после нажат", "отпусти чешуй", "сними ладонь с чешуй", "ладонь утром"]):
+            note = "ладонь после ночного нажатия"
+            if "гнезд" in msg_lower:
+                note = "ладонь у гнезда"
+            elif "стрем" in msg_lower:
+                note = "ладонь у стремени"
+            elif "лук" in msg_lower:
+                note = "ладонь у луки"
+            return self.lift_palm(note)
 
         if any(w in msg_lower for w in ["прижми ладонь", "ладонь после накрыт", "нажми на чешуй", "мягкое нажатие", "ладонь один раз"]):
             note = "мягкое нажатие после накрытия"
