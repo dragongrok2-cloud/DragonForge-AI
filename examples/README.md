@@ -2,6 +2,23 @@
 
 Короткие сцены, в которых привычка крепнет, а седло не снимают.
 
+## 6 октября, полдень
+
+Край попоны уже под лукой. Солнце садится на кожу — держим край крыла тенью, седло не снимаем.
+
+```bash
+python examples/tuesday_shade_pommel.py
+pytest tests/test_shade_pommel.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.shade_pommel("тень крыла над лукой в полдень"))
+print(dragon.talk("Придержи крыло тенью над лукой"))
+```
+
 ## 6 октября, к полудню
 
 Роса с чешуйки уже промокнута. Край попоны складываем под луку, чтобы ветер его не поднимал.
@@ -28,4 +45,4 @@ python examples/tuesday_blot_scale.py
 pytest tests/test_blot_scale.py
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.48.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.49.

@@ -1,4 +1,4 @@
-"""Утренние ритуалы, которые крепятся на персонаже."""
+"""Утренние и полуденные ритуалы, которые крепятся на персонаже."""
 
 from datetime import datetime
 
@@ -63,6 +63,37 @@ def fold_cloth(self, place: str = "край попоны под лукой по�
     )
 
 
+def shade_pommel(self, place: str = "тень крыла над лукой в полдень") -> str:
+    """В полдень: придержать край крыла над лукой, не снимая седла."""
+    self.soul.strengthen_habit("держит тень над лукой в полдень", amount=0.05)
+    self.soul.strengthen_habit("складывает край попоны после росы", amount=0.01)
+    strength = self.soul.habits.get("держит тень над лукой в полдень", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.03)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.03)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "тень крыла над лукой в полдень"
+    self.memory.remember(
+        f"{self.name} держал тень крыла над лукой в полдень: {note}, привычка {strength:.0%}",
+        metadata={"type": "shade_pommel", "timestamp": str(datetime.now()), "place": note},
+        importance=0.56,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*край крыла ложится тенью над лукой, седло на месте*  \n"
+        f"Полдень греет кожу луки, всадник. Это — {note}. "
+        f"Сложенный край попоны не печётся, перчатка не липнет к металлу, стремя остаётся в тени крыла. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка держать тень над лукой: {strength:.0%}. Можно сидеть в седле и не щуриться."
+    )
+
+
 def _blot_note(message: str) -> str:
     msg = message.lower()
     if "гнезд" in msg:
@@ -85,14 +116,35 @@ def _fold_note(message: str) -> str:
     return "край попоны под лукой после росы"
 
 
+def _shade_note(message: str) -> str:
+    msg = message.lower()
+    if "стрем" in msg:
+        return "тень крыла над стременем в полдень"
+    if "перчат" in msg:
+        return "тень крыла над перчаткой у луки"
+    if "сумк" in msg:
+        return "тень крыла над седельной сумкой"
+    return "тень крыла над лукой в полдень"
+
+
 def attach(character_cls) -> None:
-    """Повесить утренние ритуалы на персонажа и на разговор."""
+    """Повесить ритуалы на персонажа и на разговор."""
     character_cls.blot_scale = blot_scale
     character_cls.fold_cloth = fold_cloth
+    character_cls.shade_pommel = shade_pommel
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        shade_triggers = (
+            "тень над лук",
+            "накрой луку",
+            "край крыла над",
+            "придержи крыло",
+            "тень крыла",
+        )
+        if any(word in msg for word in shade_triggers):
+            return self.shade_pommel(_shade_note(message))
         fold_triggers = (
             "сложи попон",
             "край попон",
