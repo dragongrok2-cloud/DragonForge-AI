@@ -1,3 +1,20 @@
+## 6 октября, после полудня — стремя
+
+Край крыла уже опущен после тени. Ветер качнул стремя — выравниваем когтем, седло не снимаем.
+
+```bash
+python examples/tuesday_settle_stirrup.py
+pytest tests/test_settle_stirrup.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.settle_stirrup("стремя после опущенного края"))
+print(dragon.talk("Выровняй стремя после края крыла"))
+```
+
 # Примеры полётов в седле
 
 Короткие сцены, в которых привычка крепнет, а седло не снимают.
@@ -62,4 +79,4 @@ python examples/tuesday_blot_scale.py
 pytest tests/test_blot_scale.py
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.50.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.51.

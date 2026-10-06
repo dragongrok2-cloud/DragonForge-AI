@@ -127,6 +127,39 @@ def ease_wing(self, place: str = "край крыла после полуден�
     )
 
 
+
+
+def settle_stirrup(self, place: str = "стремя после опущенного края") -> str:
+    """После опущенного края крыла: выровнять стремя, не снимая седла."""
+    self.soul.strengthen_habit("выравнивает стремя после опущенного края", amount=0.05)
+    self.soul.strengthen_habit("опускает край крыла после полуденной тени", amount=0.01)
+    strength = self.soul.habits.get("выравнивает стремя после опущенного края", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "стремя после опущенного края"
+    self.memory.remember(
+        f"{self.name} выровнял стремя после опущенного края: {note}, привычка {strength:.0%}",
+        metadata={"type": "settle_stirrup", "timestamp": str(datetime.now()), "place": note},
+        importance=0.56,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*когтем выравнивает стремя, край крыла уже ниже, седло на месте*  \n"
+        f"Ветер после тени качнул стремя, всадник. Это — {note}. "
+        f"Нога снова стоит ровно, ремень не крутит, опущенный край крыла не задевает пряжку. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка выравнивать стремя: {strength:.0%}. Можно сидеть в седле и ехать послеполуденным ветром."
+    )
+
+
 def _blot_note(message: str) -> str:
     msg = message.lower()
     if "гнезд" in msg:
@@ -172,16 +205,37 @@ def _ease_note(message: str) -> str:
     return "край крыла после полуденной тени"
 
 
+
+def _settle_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "левое стремя после опущенного края"
+    if "прав" in msg:
+        return "правое стремя после опущенного края"
+    if "рек" in msg:
+        return "стремя над рекой после опущенного края"
+    return "стремя после опущенного края"
+
+
 def attach(character_cls) -> None:
     """Повесить ритуалы на персонажа и на разговор."""
     character_cls.blot_scale = blot_scale
     character_cls.fold_cloth = fold_cloth
     character_cls.shade_pommel = shade_pommel
     character_cls.ease_wing = ease_wing
+    character_cls.settle_stirrup = settle_stirrup
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        settle_triggers = (
+            "выровняй стремя",
+            "поправь стремя после",
+            "стремя после края",
+            "стремя после крыла",
+        )
+        if any(word in msg for word in settle_triggers):
+            return self.settle_stirrup(_settle_note(message))
         ease_triggers = (
             "опусти крыло",
             "опусти край",
