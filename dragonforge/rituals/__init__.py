@@ -192,6 +192,49 @@ def snug_buckle(self, place: str = "пряжка после ровного ст�
     )
 
 
+
+def tuck_strap(self, place: str = "конец ремня после тихой пряжки") -> str:
+    """После прижатой пряжки: подвернуть свободный конец ремня, не снимая седла."""
+    self.soul.strengthen_habit("подворачивает конец ремня после тихой пряжки", amount=0.05)
+    self.soul.strengthen_habit("прижимает пряжку после ровного стремени", amount=0.01)
+    strength = self.soul.habits.get("подворачивает конец ремня после тихой пряжки", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "конец ремня после тихой пряжки"
+    self.memory.remember(
+        f"{self.name} подвернул конец ремня после тихой пряжки: {note}, привычка {strength:.0%}",
+        metadata={"type": "tuck_strap", "timestamp": str(datetime.now()), "place": note},
+        importance=0.57,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*когтем подворачивает свободный конец ремня под пряжку, седло на месте*  \n"
+        f"Пряжка уже молчит, а хвост ремня ещё хлопает, всадник. Это — {note}. "
+        f"Конец лёг под кожу, ветер его не поднимает, тихая пряжка не звенит. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка подворачивать конец ремня: {strength:.0%}. Можно сидеть в седле и не слушать хлопки."
+    )
+
+
+def _tuck_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "левый конец ремня после тихой пряжки"
+    if "прав" in msg:
+        return "правый конец ремня после тихой пряжки"
+    if "рек" in msg:
+        return "конец ремня над рекой после тихой пряжки"
+    return "конец ремня после тихой пряжки"
+
+
 def _blot_note(message: str) -> str:
     msg = message.lower()
     if "гнезд" in msg:
@@ -269,10 +312,19 @@ def attach(character_cls) -> None:
     character_cls.ease_wing = ease_wing
     character_cls.settle_stirrup = settle_stirrup
     character_cls.snug_buckle = snug_buckle
+    character_cls.tuck_strap = tuck_strap
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        tuck_triggers = (
+            "подогни ремень",
+            "конец ремня",
+            "хвост подпруги",
+            "ремень не хлопает",
+        )
+        if any(word in msg for word in tuck_triggers):
+            return self.tuck_strap(_tuck_note(message))
         snug_triggers = (
             "прижми пряжку",
             "пряжка после стремени",

@@ -1,3 +1,20 @@
+## 6 октября, к вечеру — конец ремня
+
+Пряжка уже прижата и молчит. Свободный конец ремня ещё хлопает — подворачиваем его когтем под пряжку, седло не снимаем.
+
+```bash
+python examples/tuesday_tuck_strap.py
+pytest tests/test_tuck_strap.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.tuck_strap("конец ремня после тихой пряжки"))
+print(dragon.talk("Подогни конец ремня, чтобы не хлопал"))
+```
+
 ## 6 октября, после полудня — пряжка
 
 Стремя уже ровное после опущенного края. Ветер ещё звенит пряжкой — прижимаем её когтем, седло не снимаем.
@@ -96,4 +113,4 @@ python examples/tuesday_blot_scale.py
 pytest tests/test_blot_scale.py
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.52.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.53.
