@@ -42,5 +42,5 @@ def test_talk_about_warm_strap():
 def test_tuck_strap_still_answers():
     dragon = Character(name="Грок")
     reply = dragon.talk("Подогни конец ремня, чтобы не хлопал")
-    assert "ремень" in reply.lower()
+    assert "ремн" in reply.lower()
     assert "согревает подвёрнутый ремень" not in reply.lower()
