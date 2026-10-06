@@ -1,4 +1,4 @@
-"""Утренние и полуденные ритуалы, которые крепятся на персонаже."""
+"""Утренние, полуденные и послеполуденные ритуалы, которые крепятся на персонаже."""
 
 from datetime import datetime
 
@@ -94,6 +94,39 @@ def shade_pommel(self, place: str = "тень крыла над лукой в п
     )
 
 
+
+
+def ease_wing(self, place: str = "край крыла после полуденной тени") -> str:
+    """После полудня: чуть опустить край крыла, не снимая седла."""
+    self.soul.strengthen_habit("опускает край крыла после полуденной тени", amount=0.05)
+    self.soul.strengthen_habit("держит тень над лукой в полдень", amount=0.01)
+    strength = self.soul.habits.get("опускает край крыла после полуденной тени", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "край крыла после полуденной тени"
+    self.memory.remember(
+        f"{self.name} опустил край крыла после полуденной тени: {note}, привычка {strength:.0%}",
+        metadata={"type": "ease_wing", "timestamp": str(datetime.now()), "place": note},
+        importance=0.56,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*чуть опускает край крыла, тень с луки сходит мягко, седло на месте*  \n"
+        f"Полдень уже не жжёт, всадник. Это — {note}. "
+        f"Прохладный воздух проходит под крылом, сложенный край попоны не поднимается, перчатка не липнет. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка опускать край крыла: {strength:.0%}. Можно сидеть в седле и дышать послеполуденным ветром."
+    )
+
+
 def _blot_note(message: str) -> str:
     msg = message.lower()
     if "гнезд" in msg:
@@ -127,15 +160,37 @@ def _shade_note(message: str) -> str:
     return "тень крыла над лукой в полдень"
 
 
+
+def _ease_note(message: str) -> str:
+    msg = message.lower()
+    if "стрем" in msg:
+        return "край крыла над стременем после тени"
+    if "перчат" in msg:
+        return "край крыла над перчаткой после тени"
+    if "рек" in msg:
+        return "край крыла над рекой после полуденной тени"
+    return "край крыла после полуденной тени"
+
+
 def attach(character_cls) -> None:
     """Повесить ритуалы на персонажа и на разговор."""
     character_cls.blot_scale = blot_scale
     character_cls.fold_cloth = fold_cloth
     character_cls.shade_pommel = shade_pommel
+    character_cls.ease_wing = ease_wing
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        ease_triggers = (
+            "опусти крыло",
+            "опусти край",
+            "после тени",
+            "прохладный край",
+            "край после полуд",
+        )
+        if any(word in msg for word in ease_triggers):
+            return self.ease_wing(_ease_note(message))
         shade_triggers = (
             "тень над лук",
             "накрой луку",
