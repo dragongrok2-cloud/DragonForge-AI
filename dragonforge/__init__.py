@@ -4,6 +4,9 @@ from .core.character import Character, DragonCharacter
 from .core.memory import MemoryForge
 from .core.soul import Soul
 from .core.persistence import save_character, load_character, character_to_dict, character_from_dict
+from .rituals import attach as _attach_rituals
+
+_attach_rituals(Character)
 
 __version__ = "0.1.47"
 __all__ = [
