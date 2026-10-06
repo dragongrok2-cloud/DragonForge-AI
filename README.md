@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,8 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/tuesday_settle_stirrup.py        # ← НОВОЕ! стремя после опущенного края
+python examples/tuesday_snug_buckle.py          # ← НОВОЕ! пряжка после ровного стремени
+python examples/tuesday_settle_stirrup.py        # стремя после опущенного края
 python examples/tuesday_ease_wing.py             # край крыла после полуденной тени
 python examples/tuesday_lift_palm.py             # ладонь с чешуйки утром после нажатия
 python examples/monday_press_palm.py             # ладонь один раз после накрытия
@@ -176,6 +177,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - стряхивает кленовые листья после потяжки шеи
 - разглаживает луку после кленовых листьев
 - прижимает ладонь после накрытия
+- прижимает пряжку после ровного стремени
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -215,6 +217,7 @@ print(dragon.share_apple("кислое яблоко из седельной су
 print(dragon.wipe_juice("сок с луки после яблока"))
 print(dragon.dry_wing("край крыла после сока"))
 print(dragon.press_palm("мягкое нажатие после накрытия"))
+print(dragon.snug_buckle("пряжка после ровного стремени"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -282,6 +285,7 @@ print(get_theme_css())
 - [x] Ладонь с чешуйки утром после нажатия (`lift_palm`, тесты, пример 6 октября утром)
 - [x] Край крыла после полуденной тени (`ease_wing`, тесты, пример 6 октября после полудня)
 - [x] Стремя после опущенного края (`settle_stirrup`, тесты, пример 6 октября после полудня)
+- [x] Пряжка после ровного стремени (`snug_buckle`, тесты, пример 6 октября после полудня)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души

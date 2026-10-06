@@ -1,3 +1,20 @@
+## 6 октября, после полудня — пряжка
+
+Стремя уже ровное после опущенного края. Ветер ещё звенит пряжкой — прижимаем её когтем, седло не снимаем.
+
+```bash
+python examples/tuesday_snug_buckle.py
+pytest tests/test_snug_buckle.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.snug_buckle("пряжка после ровного стремени"))
+print(dragon.talk("Прижми пряжку после стремени"))
+```
+
 ## 6 октября, после полудня — стремя
 
 Край крыла уже опущен после тени. Ветер качнул стремя — выравниваем когтем, седло не снимаем.
@@ -79,4 +96,4 @@ python examples/tuesday_blot_scale.py
 pytest tests/test_blot_scale.py
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.51.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.52.

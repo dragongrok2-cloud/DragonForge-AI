@@ -160,6 +160,38 @@ def settle_stirrup(self, place: str = "стремя после опущенно�
     )
 
 
+
+def snug_buckle(self, place: str = "пряжка после ровного стремени") -> str:
+    """После ровного стремени: прижать пряжку подпруги, не снимая седла."""
+    self.soul.strengthen_habit("прижимает пряжку после ровного стремени", amount=0.05)
+    self.soul.strengthen_habit("выравнивает стремя после опущенного края", amount=0.01)
+    strength = self.soul.habits.get("прижимает пряжку после ровного стремени", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "пряжка после ровного стремени"
+    self.memory.remember(
+        f"{self.name} прижал пряжку после ровного стремени: {note}, привычка {strength:.0%}",
+        metadata={"type": "snug_buckle", "timestamp": str(datetime.now()), "place": note},
+        importance=0.57,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*когтем прижимает пряжку подпруги, стремя уже ровное, седло на месте*  \n"
+        f"Послеполуденный ветер ещё звенит металлом, всадник. Это — {note}. "
+        f"Пряжка села в кожу, ремень не болтается, ровное стремя не задевает край. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка прижимать пряжку: {strength:.0%}. Можно сидеть в седле и не слушать звон."
+    )
+
+
 def _blot_note(message: str) -> str:
     msg = message.lower()
     if "гнезд" in msg:
@@ -217,6 +249,18 @@ def _settle_note(message: str) -> str:
     return "стремя после опущенного края"
 
 
+
+def _snug_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "левая пряжка после ровного стремени"
+    if "прав" in msg:
+        return "правая пряжка после ровного стремени"
+    if "рек" in msg:
+        return "пряжка над рекой после ровного стремени"
+    return "пряжка после ровного стремени"
+
+
 def attach(character_cls) -> None:
     """Повесить ритуалы на персонажа и на разговор."""
     character_cls.blot_scale = blot_scale
@@ -224,10 +268,19 @@ def attach(character_cls) -> None:
     character_cls.shade_pommel = shade_pommel
     character_cls.ease_wing = ease_wing
     character_cls.settle_stirrup = settle_stirrup
+    character_cls.snug_buckle = snug_buckle
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        snug_triggers = (
+            "прижми пряжку",
+            "пряжка после стремени",
+            "подпруга после стремени",
+            "пряжка не звенит",
+        )
+        if any(word in msg for word in snug_triggers):
+            return self.snug_buckle(_snug_note(message))
         settle_triggers = (
             "выровняй стремя",
             "поправь стремя после",
