@@ -224,6 +224,49 @@ def tuck_strap(self, place: str = "конец ремня после тихой �
     )
 
 
+
+def warm_strap(self, place: str = "подвёрнутый ремень к вечеру") -> str:
+    """После подвёрнутого конца: согреть кожу дыханием, не снимая седла."""
+    self.soul.strengthen_habit("согревает подвёрнутый ремень к вечеру", amount=0.05)
+    self.soul.strengthen_habit("подворачивает конец ремня после тихой пряжки", amount=0.01)
+    strength = self.soul.habits.get("согревает подвёрнутый ремень к вечеру", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "подвёрнутый ремень к вечеру"
+    self.memory.remember(
+        f"{self.name} согрел подвёрнутый ремень к вечеру: {note}, привычка {strength:.0%}",
+        metadata={"type": "warm_strap", "timestamp": str(datetime.now()), "place": note},
+        importance=0.57,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*коротким дыханием греет подвёрнутый конец ремня, седло на месте*  \n"
+        f"Конец уже лежит под пряжкой, а вечерний воздух стынет, всадник. Это — {note}. "
+        f"Кожа мягкая в складке, ветер не поднимает хвост ремня, тихая пряжка не звенит. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка согревать подвёрнутый ремень: {strength:.0%}. Можно сидеть в седле и не слушать, как стынет кожа."
+    )
+
+
+def _warm_strap_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "левый подвёрнутый ремень к вечеру"
+    if "прав" in msg:
+        return "правый подвёрнутый ремень к вечеру"
+    if "рек" in msg:
+        return "подвёрнутый ремень над рекой к вечеру"
+    return "подвёрнутый ремень к вечеру"
+
+
 def _tuck_note(message: str) -> str:
     msg = message.lower()
     if "лев" in msg:
@@ -313,10 +356,20 @@ def attach(character_cls) -> None:
     character_cls.settle_stirrup = settle_stirrup
     character_cls.snug_buckle = snug_buckle
     character_cls.tuck_strap = tuck_strap
+    character_cls.warm_strap = warm_strap
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        warm_triggers = (
+            "подвёрнутый ремень",
+            "подвернутый ремень",
+            "ремень не стынет",
+            "дыхание на ремень",
+            "согрей складку",
+        )
+        if any(word in msg for word in warm_triggers):
+            return self.warm_strap(_warm_strap_note(message))
         tuck_triggers = (
             "подогни ремень",
             "конец ремня",

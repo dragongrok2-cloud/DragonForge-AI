@@ -8,7 +8,7 @@ from .rituals import attach as _attach_rituals
 
 _attach_rituals(Character)
 
-__version__ = "0.1.53"
+__version__ = "0.1.54"
 __all__ = [
     "Character",
     "DragonCharacter",

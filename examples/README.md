@@ -1,3 +1,20 @@
+## 6 октября, вечером — тёплый ремень
+
+Конец уже под пряжкой. Вечерний воздух стынет, и складка кожи может затвердеть — согреваем её коротким дыханием, седло не снимаем.
+
+```bash
+python examples/tuesday_warm_strap.py
+pytest tests/test_warm_strap.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.warm_strap("подвёрнутый ремень к вечеру"))
+print(dragon.talk("Согрей подвёрнутый ремень, чтобы не стыл"))
+```
+
 ## 6 октября, к вечеру — конец ремня
 
 Пряжка уже прижата и молчит. Свободный конец ремня ещё хлопает — подворачиваем его когтем под пряжку, седло не снимаем.
@@ -113,4 +130,4 @@ python examples/tuesday_blot_scale.py
 pytest tests/test_blot_scale.py
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.53.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.54.
