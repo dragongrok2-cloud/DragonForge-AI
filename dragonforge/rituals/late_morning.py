@@ -89,14 +89,65 @@ def _tuck_thread_note(message: str) -> str:
     return "конец нитки под стежками к полудню"
 
 
+
+def glance_thread(self, place: str = "медовый хвостик в послеполуденном свете") -> str:
+    """После прижатого конца: глянуть медовый хвостик в свете, не разворачивая подворот и не снимая седла."""
+    self.soul.strengthen_habit("глядит медовый хвостик в послеполуденном свете", amount=0.05)
+    self.soul.strengthen_habit("прижимает конец нитки к полудню", amount=0.01)
+    strength = self.soul.habits.get("глядит медовый хвостик в послеполуденном свете", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "медовый хвостик в послеполуденном свете"
+    self.memory.remember(
+        f"{self.name} глянул медовый хвостик в послеполуденном свете: {note}, привычка {strength:.0%}",
+        metadata={"type": "glance_thread", "timestamp": str(datetime.now()), "place": note},
+        importance=0.58,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*после полудня глядит на медовый хвостик в свете, подворот не разворачивает, седло на месте*  \n"
+        f"Конец уже лежит под стежками, всадник. Это — {note}. "
+        f"Медовый шов блестит ровно, ветер хвостик не тянет, подворот на месте. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка глядеть медовый хвостик: {strength:.0%}. Можно сидеть в седле и не ловить нитку глазами."
+    )
+
+
+def _glance_thread_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "медовый хвостик на левых стежках в послеполуденном свете"
+    if "прав" in msg:
+        return "медовый хвостик на правых стежках в послеполуденном свете"
+    if "рек" in msg:
+        return "медовый хвостик над рекой в послеполуденном свете"
+    return "медовый хвостик в послеполуденном свете"
+
+
 def attach_late(character_cls) -> None:
     """Повесить позднеутренний ритуал поверх уже прикреплённых разговоров."""
     character_cls.name_thread = name_thread
     character_cls.tuck_thread = tuck_thread
+    character_cls.glance_thread = glance_thread
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        glance_triggers = (
+            "глянь нит",
+            "глянь шов",
+            "медовый хвостик на свету",
+            "свет на шве",
+            "послеполуденный свет на нит",
+        )
         tuck_triggers = (
             "прижми конец нит",
             "конец нитки",
@@ -111,6 +162,8 @@ def attach_late(character_cls) -> None:
             "какого цвета шов",
             "нитка у пряж",
         )
+        if any(word in msg for word in glance_triggers):
+            return self.glance_thread(_glance_thread_note(message))
         if any(word in msg for word in tuck_triggers):
             return self.tuck_thread(_tuck_thread_note(message))
         if any(word in msg for word in thread_triggers):
