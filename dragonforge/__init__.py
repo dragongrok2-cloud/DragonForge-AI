@@ -10,7 +10,7 @@ from .rituals.late_morning import attach_late as _attach_late
 _attach_rituals(Character)
 _attach_late(Character)
 
-__version__ = "0.1.59"
+__version__ = "0.1.60"
 __all__ = [
     "Character",
     "DragonCharacter",

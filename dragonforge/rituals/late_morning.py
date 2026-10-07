@@ -132,15 +132,67 @@ def _glance_thread_note(message: str) -> str:
     return "медовый хвостик в послеполуденном свете"
 
 
+
+
+def knot_thread(self, place: str = "узелок на медовом хвостике к позднему дню") -> str:
+    """После взгляда: завязать маленький узелок, не разворачивая подворот и не снимая седла."""
+    self.soul.strengthen_habit("завязывает узелок на медовом хвостике к позднему дню", amount=0.05)
+    self.soul.strengthen_habit("глядит медовый хвостик в послеполуденном свете", amount=0.01)
+    strength = self.soul.habits.get("завязывает узелок на медовом хвостике к позднему дню", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "узелок на медовом хвостике к позднему дню"
+    self.memory.remember(
+        f"{self.name} завязал узелок на медовом хвостике к позднему дню: {note}, привычка {strength:.0%}",
+        metadata={"type": "knot_thread", "timestamp": str(datetime.now()), "place": note},
+        importance=0.59,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*к позднему дню завязывает маленький узелок на медовом хвостике, подворот не разворачивает, седло на месте*  \n"
+        f"Хвостик уже блестел в свете, всадник. Это — {note}. "
+        f"Узелок тихий, нитка не вытянется, подворот на месте. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка завязывать узелок: {strength:.0%}. Можно сидеть в седле и не ловить конец нитки."
+    )
+
+
+def _knot_thread_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "узелок на левом медовом хвостике к позднему дню"
+    if "прав" in msg:
+        return "узелок на правом медовом хвостике к позднему дню"
+    if "рек" in msg:
+        return "узелок на медовом хвостике над рекой к позднему дню"
+    return "узелок на медовом хвостике к позднему дню"
+
+
 def attach_late(character_cls) -> None:
     """Повесить позднеутренний ритуал поверх уже прикреплённых разговоров."""
     character_cls.name_thread = name_thread
     character_cls.tuck_thread = tuck_thread
     character_cls.glance_thread = glance_thread
+    character_cls.knot_thread = knot_thread
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        knot_triggers = (
+            "завяжи узел",
+            "узелок на хвост",
+            "узелок на нит",
+            "медовый узелок",
+            "завяжи хвостик",
+        )
         glance_triggers = (
             "глянь нит",
             "глянь шов",
@@ -162,6 +214,8 @@ def attach_late(character_cls) -> None:
             "какого цвета шов",
             "нитка у пряж",
         )
+        if any(word in msg for word in knot_triggers):
+            return self.knot_thread(_knot_thread_note(message))
         if any(word in msg for word in glance_triggers):
             return self.glance_thread(_glance_thread_note(message))
         if any(word in msg for word in tuck_triggers):

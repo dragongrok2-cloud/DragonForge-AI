@@ -207,4 +207,24 @@ print(dragon.pat_fold("тёплая складка ремня утром"))
 print(dragon.talk("Погладь тёплую складку утром"))
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.59.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.60.
+
+
+## 7 октября, к позднему дню
+
+Хвостик уже блестел в свете. К позднему дню только завязываем маленький узелок, подворот не разворачиваем.
+
+```bash
+python examples/wednesday_knot_thread.py
+pytest tests/test_knot_thread.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.knot_thread("узелок на медовом хвостике к позднему дню"))
+print(dragon.talk("Завяжи медовый узелок"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Поздний день нитки — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.60.
