@@ -391,6 +391,49 @@ def _pat_fold_note(message: str) -> str:
     return "тёплая складка ремня утром"
 
 
+
+def count_stitch(self, place: str = "стежки на тёплой складке утром") -> str:
+    """После поглаживания складки: посчитать стежки, не разворачивая подворот и не снимая седла."""
+    self.soul.strengthen_habit("считает стежки на тёплой складке утром", amount=0.05)
+    self.soul.strengthen_habit("поглаживает тёплую складку ремня утром", amount=0.01)
+    strength = self.soul.habits.get("считает стежки на тёплой складке утром", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "стежки на тёплой складке утром"
+    self.memory.remember(
+        f"{self.name} посчитал стежки на тёплой складке утром: {note}, привычка {strength:.0%}",
+        metadata={"type": "count_stitch", "timestamp": str(datetime.now()), "place": note},
+        importance=0.57,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*утром когтем считает стежки на тёплой складке, подворот не разворачивает, седло на месте*  \n"
+        f"Складка уже поглажена, всадник. Это — {note}. "
+        f"Стежки целые, нитка не торчит, подворот на месте. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка считать стежки: {strength:.0%}. Можно садиться в седло и не слушать, как расходится шов."
+    )
+
+
+def _count_stitch_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "стежки на левой тёплой складке утром"
+    if "прав" in msg:
+        return "стежки на правой тёплой складке утром"
+    if "рек" in msg:
+        return "стежки на тёплой складке над рекой утром"
+    return "стежки на тёплой складке утром"
+
+
 def attach(character_cls) -> None:
     """Повесить ритуалы на персонажа и на разговор."""
     character_cls.blot_scale = blot_scale
@@ -402,10 +445,20 @@ def attach(character_cls) -> None:
     character_cls.tuck_strap = tuck_strap
     character_cls.warm_strap = warm_strap
     character_cls.pat_fold = pat_fold
+    character_cls.count_stitch = count_stitch
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
         msg = message.lower()
+        stitch_triggers = (
+            "посчитай стеж",
+            "стежки на склад",
+            "стежок у пряж",
+            "сколько стежков",
+            "стежки на ремн",
+        )
+        if any(word in msg for word in stitch_triggers):
+            return self.count_stitch(_count_stitch_note(message))
         pat_triggers = (
             "погладь складку",
             "тёплую складку",

@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -294,6 +294,7 @@ print(get_theme_css())
 - [x] Конец ремня после тихой пряжки (`tuck_strap`, тесты, пример 6 октября к вечеру)
 - [x] Тёплый ремень после подворота (`warm_strap`, тесты, пример 6 октября вечером)
 - [x] Утренняя складка после тёплого ремня (`pat_fold`, тесты, пример 7 октября утром)
+- [x] Стежки на тёплой складке (`count_stitch`, тесты, пример 7 октября утром)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
