@@ -1,3 +1,37 @@
+## 7 октября, к позднему утру — цвет нитки
+
+Стежки уже посчитаны на тёплой складке. К позднему утру называем цвет нитки, подворот не разворачиваем, седло не снимаем.
+
+```bash
+python examples/wednesday_name_thread.py
+pytest tests/test_name_thread.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.name_thread("цвет нитки на стежках к позднему утру"))
+print(dragon.talk("Назови цвет нитки на стежках"))
+```
+
+## 7 октября, утро — стежки
+
+Складка уже поглажена. Считаем стежки когтем, подворот не разворачиваем.
+
+```bash
+python examples/wednesday_count_stitch.py
+pytest tests/test_count_stitch.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.count_stitch("стежки на тёплой складке утром"))
+print(dragon.talk("Посчитай стежки на складке"))
+```
+
 ## 6 октября, вечером — тёплый ремень
 
 Конец уже под пряжкой. Вечерний воздух стынет, и складка кожи может затвердеть — согреваем её коротким дыханием, седло не снимаем.
@@ -147,4 +181,4 @@ print(dragon.pat_fold("тёплая складка ремня утром"))
 print(dragon.talk("Погладь тёплую складку утром"))
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.55.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.57.
