@@ -1,5 +1,24 @@
 # Примеры полётов в седле
 
+К вечеру 7 октября узелок уже тёплый от дыхания. Только постукиваем по нему когтем, не развязывая и не снимая седла.
+
+```bash
+python examples/wednesday_tap_knot.py
+pytest tests/test_tap_knot.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.tap_knot("коготь по тёплому узелку к вечеру"))
+print(dragon.talk("Постучи по узелку, он на месте?"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Вечер нитки — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.62.
+
+# Примеры полётов в седле
+
 К позднему дню 7 октября узелок уже тихий. Согреваем его коротким дыханием, не развязывая и не снимая седла.
 
 ```bash

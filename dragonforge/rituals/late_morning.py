@@ -220,6 +220,50 @@ def _huff_knot_note(message: str) -> str:
     return "дыхание на медовый узелок к позднему дню"
 
 
+
+
+def tap_knot(self, place: str = "коготь по тёплому узелку к вечеру") -> str:
+    """После дыхания: тихо постучать когтем по узелку, не развязывая его и не снимая седла."""
+    self.soul.strengthen_habit("постукивает по тёплому узелку к вечеру", amount=0.05)
+    self.soul.strengthen_habit("согревает медовый узелок к позднему дню", amount=0.01)
+    strength = self.soul.habits.get("постукивает по тёплому узелку к вечеру", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "коготь по тёплому узелку к вечеру"
+    self.memory.remember(
+        f"{self.name} постучал по тёплому узелку к вечеру: {note}, привычка {strength:.0%}",
+        metadata={"type": "tap_knot", "timestamp": str(datetime.now()), "place": note},
+        importance=0.6,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*к вечеру постукивает когтем по тёплому узелку, не развязывая его, подворот не разворачивает, седло на месте*  \n"
+        f"Дыхание уже согрело шов, всадник. Это — {note}. "
+        f"Узелок отвечает тихо, нитка не расходится, подворот на месте. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка постукивать по тёплому узелку: {strength:.0%}. Можно сидеть в седле и знать, что узел на месте."
+    )
+
+
+def _tap_knot_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "коготь по левому тёплому узелку к вечеру"
+    if "прав" in msg:
+        return "коготь по правому тёплому узелку к вечеру"
+    if "рек" in msg:
+        return "коготь по тёплому узелку над рекой к вечеру"
+    return "коготь по тёплому узелку к вечеру"
+
+
 def attach_late(character_cls) -> None:
     """Повесить позднеутренний ритуал поверх уже прикреплённых разговоров."""
     character_cls.name_thread = name_thread
@@ -227,6 +271,7 @@ def attach_late(character_cls) -> None:
     character_cls.glance_thread = glance_thread
     character_cls.knot_thread = knot_thread
     character_cls.huff_knot = huff_knot
+    character_cls.tap_knot = tap_knot
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
@@ -266,6 +311,15 @@ def attach_late(character_cls) -> None:
             "какого цвета шов",
             "нитка у пряж",
         )
+        tap_triggers = (
+            "постучи по узел",
+            "коготь по узел",
+            "узелок на месте",
+            "проверь узелок",
+            "постучи по тёпл",
+        )
+        if any(word in msg for word in tap_triggers):
+            return self.tap_knot(_tap_knot_note(message))
         if any(word in msg for word in huff_triggers):
             return self.huff_knot(_huff_knot_note(message))
         if any(word in msg for word in knot_triggers):
