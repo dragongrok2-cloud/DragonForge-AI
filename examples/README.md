@@ -1,5 +1,24 @@
 # Примеры полётов в седле
 
+К позднему дню 7 октября узелок уже тихий. Согреваем его коротким дыханием, не развязывая и не снимая седла.
+
+```bash
+python examples/wednesday_huff_knot.py
+pytest tests/test_huff_knot.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.huff_knot("дыхание на медовый узелок к позднему дню"))
+print(dragon.talk("Подыши на узелок, чтобы не стыл"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Поздний день нитки — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.61.
+
+# Примеры полётов в седле
+
 Послеполуденный ритуал 7 октября: глянуть медовый хвостик в свете, не разворачивая подворот.
 
 ```bash
@@ -207,7 +226,7 @@ print(dragon.pat_fold("тёплая складка ремня утром"))
 print(dragon.talk("Погладь тёплую складку утром"))
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.60.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.61.
 
 
 ## 7 октября, к позднему дню
@@ -227,4 +246,4 @@ print(dragon.knot_thread("узелок на медовом хвостике к �
 print(dragon.talk("Завяжи медовый узелок"))
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Поздний день нитки — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.60.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Поздний день нитки — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.61.

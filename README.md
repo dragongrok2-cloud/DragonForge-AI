@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,8 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/wednesday_knot_thread.py        # ← НОВОЕ! узелок на медовом хвостике к позднему дню
+python examples/wednesday_huff_knot.py         # ← НОВОЕ! дыхание на медовый узелок к позднему дню
+python examples/wednesday_knot_thread.py        # узелок на медовом хвостике к позднему дню
 python examples/wednesday_glance_thread.py      # медовый хвостик в послеполуденном свете
 python examples/wednesday_tuck_thread.py        # конец нитки к полудню
 python examples/wednesday_name_thread.py         # цвет нитки к позднему утру
@@ -185,6 +186,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - прижимает ладонь после накрытия
 - прижимает пряжку после ровного стремени
 - подворачивает конец ремня после тихой пряжки
+- согревает медовый узелок к позднему дню
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -227,6 +229,7 @@ print(dragon.press_palm("мягкое нажатие после накрытия
 print(dragon.snug_buckle("пряжка после ровного стремени"))
 print(dragon.warm_strap("подвёрнутый ремень к вечеру"))
 print(dragon.tuck_strap("конец ремня после тихой пряжки"))
+print(dragon.huff_knot("дыхание на медовый узелок к позднему дню"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
@@ -303,6 +306,7 @@ print(get_theme_css())
 - [x] Конец нитки под стежками к полудню (`tuck_thread`, тесты, пример 7 октября в полдень)
 - [x] Медовый хвостик в послеполуденном свете (`glance_thread`, тесты, пример 7 октября после полудня)
 - [x] Узелок на медовом хвостике к позднему дню (`knot_thread`, тесты, пример 7 октября к позднему дню)
+- [x] Дыхание на медовый узелок к позднему дню (`huff_knot`, тесты, пример 7 октября к позднему дню)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
