@@ -1,3 +1,16 @@
+# Примеры полётов в седле
+
+Полуденный ритуал 7 октября: прижать конец нитки под уже названные стежки.
+
+```bash
+python examples/wednesday_tuck_thread.py
+pytest tests/test_tuck_thread.py
+```
+
+```python
+print(dragon.tuck_thread("конец нитки под стежками к полудню"))
+```
+
 ## 7 октября, к позднему утру — цвет нитки
 
 Стежки уже посчитаны на тёплой складке. К позднему утру называем цвет нитки, подворот не разворачиваем, седло не снимаем.
@@ -181,4 +194,4 @@ print(dragon.pat_fold("тёплая складка ремня утром"))
 print(dragon.talk("Погладь тёплую складку утром"))
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.57.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Позднее утро — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.58.
