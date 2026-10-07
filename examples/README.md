@@ -130,4 +130,21 @@ python examples/tuesday_blot_scale.py
 pytest tests/test_blot_scale.py
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.54.
+## 7 октября, утро
+
+Ночное дыхание ещё держит складку ремня. Утром только поглаживаем её, подворот не разворачиваем.
+
+```bash
+python examples/wednesday_pat_fold.py
+pytest tests/test_pat_fold.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.pat_fold("тёплая складка ремня утром"))
+print(dragon.talk("Погладь тёплую складку утром"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Версия пакета: 0.1.55.
