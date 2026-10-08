@@ -6,9 +6,11 @@ from .core.soul import Soul
 from .core.persistence import save_character, load_character, character_to_dict, character_from_dict
 from .rituals import attach as _attach_rituals
 from .rituals.late_morning import attach_late as _attach_late
+from .rituals.count_loops import attach_count as _attach_count
 
 _attach_rituals(Character)
 _attach_late(Character)
+_attach_count(Character)
 
 __version__ = "0.1.64"
 __all__ = [
