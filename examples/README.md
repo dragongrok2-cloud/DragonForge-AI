@@ -1,5 +1,24 @@
 # Примеры полётов в седле
 
+После полудня 8 октября петли уже названы: Мёд, Шов и Седло. Край крыла кладём над ними тенью — не развязывая узелок и не снимая седла.
+
+```bash
+python examples/thursday_shade_loops.py
+pytest tests/test_shade_loops.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.shade_loops("тень крыла на петлях медового узелка после полудня"))
+print(dragon.talk("Затени петли узелка"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Тень петель — в `dragonforge/rituals/shade_loops.py`. Версия пакета: 0.1.67.
+
+# Примеры полётов в седле
+
 К раннему дню 8 октября петли уже обведены когтем. Даём им три тихих имени — Мёд, Шов и Седло — не развязывая узелок и не снимая седла.
 
 ```bash
