@@ -1,5 +1,24 @@
 # Примеры полётов в седле
 
+К раннему дню 8 октября петли уже обведены когтем. Даём им три тихих имени — Мёд, Шов и Седло — не развязывая узелок и не снимая седла.
+
+```bash
+python examples/thursday_name_loops.py
+pytest tests/test_name_loops.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.name_loops("имена петель медового узелка к раннему дню"))
+print(dragon.talk("Назови петли узелка"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Имена петель — в `dragonforge/rituals/name_loops.py`. Версия пакета: 0.1.66.
+
+# Примеры полётов в седле
+
 К полудню 8 октября петли уже сосчитаны. Когтем обводим их, не развязывая узелок и не снимая седла.
 
 ```bash
