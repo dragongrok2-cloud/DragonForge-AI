@@ -7,12 +7,14 @@ from .core.persistence import save_character, load_character, character_to_dict,
 from .rituals import attach as _attach_rituals
 from .rituals.late_morning import attach_late as _attach_late
 from .rituals.count_loops import attach_count as _attach_count
+from .rituals.trace_loops import attach_trace as _attach_trace
 
 _attach_rituals(Character)
 _attach_late(Character)
 _attach_count(Character)
+_attach_trace(Character)
 
-__version__ = "0.1.64"
+__version__ = "0.1.65"
 __all__ = [
     "Character",
     "DragonCharacter",
