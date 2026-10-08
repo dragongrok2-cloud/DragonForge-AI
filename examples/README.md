@@ -1,5 +1,24 @@
 # Примеры полётов в седле
 
+К позднему дню 8 октября тень уже лежит на названных петлях. Только дышим на них, не развязывая узелок и не снимая седла.
+
+```bash
+python examples/thursday_warm_loops.py
+pytest tests/test_warm_loops.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.warm_loops("дыхание на петлях медового узелка к позднему дню"))
+print(dragon.talk("Согрей петли узелка"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Дыхание на петли — в `dragonforge/rituals/warm_loops.py`. Версия пакета: 0.1.68.
+
+# Примеры полётов в седле
+
 После полудня 8 октября петли уже названы: Мёд, Шов и Седло. Край крыла кладём над ними тенью — не развязывая узелок и не снимая седла.
 
 ```bash
