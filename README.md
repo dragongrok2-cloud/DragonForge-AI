@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`, `tap_knot()`, `listen_knot()`, `count_loops()`, `trace_loops()`, `name_loops()`, `shade_loops()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`, `tap_knot()`, `listen_knot()`, `count_loops()`, `trace_loops()`, `name_loops()`, `shade_loops()`, `warm_loops()`, `drape_loops()`, `smooth_drape()`, `tuck_lantern()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,10 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/thursday_shade_loops.py        # ← НОВОЕ! тень крыла на названных петлях после полудня
+python examples/thursday_evening_tuck_lantern.py   # ← НОВОЕ! фонарик под разглаженный край попоны к вечеру
+python examples/thursday_evening_smooth_drape.py   # ладонь по краю попоны к вечеру
+python examples/thursday_drape_loops.py            # край попоны на согретых петлях к середине дня
+python examples/thursday_shade_loops.py        # тень крыла на названных петлях после полудня
 python examples/thursday_name_loops.py         # имена петель медового узелка к раннему дню
 python examples/thursday_listen_knot.py        # ухо к медовому узелку утром
 python examples/wednesday_tap_knot.py          # коготь по тёплому узелку к вечеру
@@ -194,6 +197,10 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - постукивает по тёплому узелку к вечеру
 - слушает медовый узелок утром
 - накрывает петли медового узелка тенью после полудня
+- согревает названные петли дыханием к позднему дню
+- накрывает согретые петли краем попоны к середине дня
+- гладит край попоны на согретых петлях к вечеру
+- подтыкает фонарик под разглаженный край попоны к вечеру
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -240,6 +247,8 @@ print(dragon.huff_knot("дыхание на медовый узелок к по�
 print(dragon.tap_knot("коготь по тёплому узелку к вечеру"))
 print(dragon.listen_knot("ухо к медовому узелку утром"))
 print(dragon.shade_loops("тень крыла на петлях медового узелка после полудня"))
+print(dragon.smooth_drape("край попоны на петлях медового узелка к вечеру"))
+print(dragon.tuck_lantern("фонарик под разглаженный край попоны к вечеру"))
 print(dragon.soft_landing())
 print(dragon.habits())
 ```
