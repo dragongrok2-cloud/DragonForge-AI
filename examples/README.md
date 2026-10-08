@@ -1,5 +1,24 @@
 # Примеры полётов в седле
 
+Утро 8 октября. Узелок переночевал на шве. Только прикладываем ухо, не развязывая и не снимая седла.
+
+```bash
+python examples/thursday_listen_knot.py
+pytest tests/test_listen_knot.py
+```
+
+```python
+from dragonforge import Character
+
+dragon = Character(name="Грок", title="добрый дракон с седлом")
+print(dragon.listen_knot("ухо к медовому узелку утром"))
+print(dragon.talk("Послушай узелок за ночь"))
+```
+
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Утро узелка — в `dragonforge/rituals/late_morning.py`. Версия пакета: 0.1.63.
+
+# Примеры полётов в седле
+
 К вечеру 7 октября узелок уже тёплый от дыхания. Только постукиваем по нему когтем, не развязывая и не снимая седла.
 
 ```bash

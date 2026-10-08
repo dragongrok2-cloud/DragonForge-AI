@@ -264,6 +264,49 @@ def _tap_knot_note(message: str) -> str:
     return "коготь по тёплому узелку к вечеру"
 
 
+
+def listen_knot(self, place: str = "ухо к медовому узелку утром") -> str:
+    """После ночи: прислушаться к узелку, не развязывая его и не снимая седла."""
+    self.soul.strengthen_habit("слушает медовый узелок утром", amount=0.05)
+    self.soul.strengthen_habit("постукивает по тёплому узелку к вечеру", amount=0.01)
+    strength = self.soul.habits.get("слушает медовый узелок утром", 0.0)
+    joy = self.soul.emotional_state.get("joy", 0.5)
+    trust = self.soul.emotional_state.get("trust", 0.5)
+    calm = self.soul.emotional_state.get("calm", self.soul.emotional_state.get("energy", 0.5))
+    self.soul.emotional_state["joy"] = min(1.0, joy + 0.02)
+    self.soul.emotional_state["trust"] = min(1.0, trust + 0.02)
+    if "calm" in self.soul.emotional_state:
+        self.soul.emotional_state["calm"] = min(1.0, calm + 0.02)
+    else:
+        self.soul.emotional_state["energy"] = min(1.0, self.soul.emotional_state.get("energy", 0.5) + 0.01)
+    note = place.strip() or "ухо к медовому узелку утром"
+    self.memory.remember(
+        f"{self.name} послушал медовый узелок утром: {note}, привычка {strength:.0%}",
+        metadata={"type": "listen_knot", "timestamp": str(datetime.now()), "place": note},
+        importance=0.61,
+    )
+    joy_after = self.soul.emotional_state["joy"]
+    trust_after = self.soul.emotional_state["trust"]
+    return (
+        f"*утром прикладывает ухо к медовому узелку, не развязывая его, подворот не разворачивает, седло на месте*  \n"
+        f"Ночь уже подержала шов, всадник. Это — {note}. "
+        f"Узелок тихо держит нитку, подворот на месте. Седло не снимаем, ремни на месте. "
+        f"Радость {joy_after:.2f}, доверие {trust_after:.2f}. "
+        f"Привычка слушать медовый узелок утром: {strength:.0%}. Можно сидеть в седле и знать, что ночь его не распустила."
+    )
+
+
+def _listen_knot_note(message: str) -> str:
+    msg = message.lower()
+    if "лев" in msg:
+        return "ухо к левому медовому узелку утром"
+    if "прав" in msg:
+        return "ухо к правому медовому узелку утром"
+    if "рек" in msg:
+        return "ухо к медовому узелку над рекой утром"
+    return "ухо к медовому узелку утром"
+
+
 def attach_late(character_cls) -> None:
     """Повесить позднеутренний ритуал поверх уже прикреплённых разговоров."""
     character_cls.name_thread = name_thread
@@ -272,6 +315,7 @@ def attach_late(character_cls) -> None:
     character_cls.knot_thread = knot_thread
     character_cls.huff_knot = huff_knot
     character_cls.tap_knot = tap_knot
+    character_cls.listen_knot = listen_knot
     original = character_cls.talk
 
     def talk(self, message: str, use_llm: bool = False) -> str:
@@ -311,6 +355,13 @@ def attach_late(character_cls) -> None:
             "какого цвета шов",
             "нитка у пряж",
         )
+        listen_triggers = (
+            "послушай узел",
+            "ухо к узел",
+            "узелок за ночь",
+            "утренний узелок",
+            "ночной узелок",
+        )
         tap_triggers = (
             "постучи по узел",
             "коготь по узел",
@@ -318,6 +369,8 @@ def attach_late(character_cls) -> None:
             "проверь узелок",
             "постучи по тёпл",
         )
+        if any(word in msg for word in listen_triggers):
+            return self.listen_knot(_listen_knot_note(message))
         if any(word in msg for word in tap_triggers):
             return self.tap_knot(_tap_knot_note(message))
         if any(word in msg for word in huff_triggers):
