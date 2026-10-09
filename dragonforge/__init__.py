@@ -18,6 +18,7 @@ from .rituals.cup_glow import attach_cup as _attach_cup
 from .rituals.blot_bead import attach_bead as _attach_bead
 from .rituals.tilt_glass import attach_tilt as _attach_tilt
 from .rituals.share_crumb import attach_crumb as _attach_crumb
+from .rituals.sweep_crumb import attach_sweep as _attach_sweep
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -33,8 +34,9 @@ _attach_cup(Character)
 _attach_bead(Character)
 _attach_tilt(Character)
 _attach_crumb(Character)
+_attach_sweep(Character)
 
-__version__ = "0.1.75"
+__version__ = "0.1.76"
 __all__ = [
     "Character",
     "DragonCharacter",
