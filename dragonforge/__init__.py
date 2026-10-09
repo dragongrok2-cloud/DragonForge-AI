@@ -14,6 +14,7 @@ from .rituals.warm_loops import attach_warm as _attach_warm
 from .rituals.drape_loops import attach_drape as _attach_drape
 from .rituals.smooth_drape import attach_smooth as _attach_smooth
 from .rituals.tuck_lantern import attach_lantern as _attach_lantern
+from .rituals.cup_glow import attach_cup as _attach_cup
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -25,8 +26,9 @@ _attach_warm(Character)
 _attach_drape(Character)
 _attach_smooth(Character)
 _attach_lantern(Character)
+_attach_cup(Character)
 
-__version__ = "0.1.71"
+__version__ = "0.1.72"
 __all__ = [
     "Character",
     "DragonCharacter",
