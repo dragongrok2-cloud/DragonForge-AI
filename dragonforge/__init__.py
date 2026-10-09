@@ -23,6 +23,7 @@ from .rituals.rest_stripe import attach_stripe as _attach_stripe
 from .rituals.shift_stripe import attach_shift as _attach_shift
 from .rituals.curl_fingers import attach_curl as _attach_curl
 from .rituals.ease_fold import attach_ease_fold as _attach_ease_fold
+from .rituals.lay_warmth import attach_lay_warmth as _attach_lay_warmth
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -43,8 +44,9 @@ _attach_stripe(Character)
 _attach_shift(Character)
 _attach_curl(Character)
 _attach_ease_fold(Character)
+_attach_lay_warmth(Character)
 
-__version__ = "0.1.80"
+__version__ = "0.1.81"
 __all__ = [
     "Character",
     "DragonCharacter",
