@@ -21,6 +21,7 @@ from .rituals.share_crumb import attach_crumb as _attach_crumb
 from .rituals.sweep_crumb import attach_sweep as _attach_sweep
 from .rituals.rest_stripe import attach_stripe as _attach_stripe
 from .rituals.shift_stripe import attach_shift as _attach_shift
+from .rituals.curl_fingers import attach_curl as _attach_curl
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -39,8 +40,9 @@ _attach_crumb(Character)
 _attach_sweep(Character)
 _attach_stripe(Character)
 _attach_shift(Character)
+_attach_curl(Character)
 
-__version__ = "0.1.78"
+__version__ = "0.1.79"
 __all__ = [
     "Character",
     "DragonCharacter",

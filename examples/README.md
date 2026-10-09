@@ -1,27 +1,27 @@
 # Примеры полётов в седле
 
-После полудня 9 октября ладонь уже лежит на светлой полоске. Сдвигаем её на одну чешуйку, чтобы солнце согрело костяшки, не вытаскивая фонарик и не снимая седла.
+После полудня 9 октября полоска уже лежит на костяшках. Сгибаем пальцы один раз, чтобы свет лёг в сгиб, не вытаскивая фонарик и не снимая седла.
 
 ```bash
-python examples/friday_afternoon_shift_stripe.py
-pytest tests/test_shift_stripe.py
+python examples/friday_afternoon_curl_fingers.py
+pytest tests/test_curl_fingers.py
 ```
 
 ```python
 from dragonforge import Character
 
 dragon = Character(name="Грок", title="добрый дракон с седлом")
-print(dragon.shift_stripe("полоска солнца на костяшках после полудня"))
-print(dragon.talk("Сдвинь полоску на костяшки"))
+print(dragon.curl_fingers("пальцы в полоске солнца после полудня"))
+print(dragon.talk("Согни пальцы в полоске"))
 ```
 
-Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Сдвиг полоски — в `dragonforge/rituals/shift_stripe.py`. Версия пакета: 0.1.78.
+Ритуалы живут в `dragonforge/rituals` и вешаются на `Character` при импорте. Сгиб пальцев — в `dragonforge/rituals/curl_fingers.py`. Версия пакета: 0.1.79.
 
-Старые примеры полётов не сняты: они лежат файлами в `examples/`, от утреннего узелка до ладони на светлой полоске.
+Старые примеры полётов не сняты: они лежат файлами в `examples/`, от утреннего узелка до полоски на костяшках.
 
 ```bash
+python examples/friday_afternoon_shift_stripe.py
 python examples/friday_afternoon_rest_stripe.py
 python examples/friday_afternoon_sweep_crumb.py
-python examples/friday_noon_share_crumb.py
-pytest tests/test_shift_stripe.py tests/test_rest_stripe.py tests/test_sweep_crumb.py
+pytest tests/test_curl_fingers.py tests/test_shift_stripe.py tests/test_rest_stripe.py
 ```
