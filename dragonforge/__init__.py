@@ -20,6 +20,7 @@ from .rituals.tilt_glass import attach_tilt as _attach_tilt
 from .rituals.share_crumb import attach_crumb as _attach_crumb
 from .rituals.sweep_crumb import attach_sweep as _attach_sweep
 from .rituals.rest_stripe import attach_stripe as _attach_stripe
+from .rituals.shift_stripe import attach_shift as _attach_shift
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -37,8 +38,9 @@ _attach_tilt(Character)
 _attach_crumb(Character)
 _attach_sweep(Character)
 _attach_stripe(Character)
+_attach_shift(Character)
 
-__version__ = "0.1.77"
+__version__ = "0.1.78"
 __all__ = [
     "Character",
     "DragonCharacter",
