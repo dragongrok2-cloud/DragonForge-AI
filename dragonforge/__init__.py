@@ -25,6 +25,7 @@ from .rituals.curl_fingers import attach_curl as _attach_curl
 from .rituals.ease_fold import attach_ease_fold as _attach_ease_fold
 from .rituals.lay_warmth import attach_lay_warmth as _attach_lay_warmth
 from .rituals.pat_pommel import attach_pat_pommel as _attach_pat_pommel
+from .rituals.trace_pommel import attach_trace_pommel as _attach_trace_pommel
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -47,8 +48,9 @@ _attach_curl(Character)
 _attach_ease_fold(Character)
 _attach_lay_warmth(Character)
 _attach_pat_pommel(Character)
+_attach_trace_pommel(Character)
 
-__version__ = "0.1.82"
+__version__ = "0.1.85"
 __all__ = [
     "Character",
     "DragonCharacter",
