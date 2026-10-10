@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`, `tap_knot()`, `listen_knot()`, `count_loops()`, `trace_loops()`, `name_loops()`, `shade_loops()`, `warm_loops()`, `drape_loops()`, `smooth_drape()`, `tuck_lantern()`, `tilt_glass()`, `share_crumb()`, `sweep_crumb()`, `rest_stripe()`, `shift_stripe()`, `curl_fingers()`, `ease_fold()`, `lay_warmth()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`, `tap_knot()`, `listen_knot()`, `count_loops()`, `trace_loops()`, `name_loops()`, `shade_loops()`, `warm_loops()`, `drape_loops()`, `smooth_drape()`, `tuck_lantern()`, `tilt_glass()`, `share_crumb()`, `sweep_crumb()`, `rest_stripe()`, `shift_stripe()`, `curl_fingers()`, `ease_fold()`, `lay_warmth()`, `pat_pommel()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -76,7 +76,8 @@ python examples/friday_evening_constellation.py   # шёпот созвезди�
 python examples/friday_evening_bank_home.py   # разворот к гнезду
 python examples/saturday_october_3_saddle_flight.py   # роса на седле
 python examples/saturday_level_glide.py        # планирование после термика
-python examples/friday_evening_lay_warmth.py   # ← НОВОЕ! тепло сгиба на луке к вечеру 9 октября
+python examples/saturday_october_10_pat_pommel.py   # ← НОВОЕ! погладить луку утром 10 октября после тепла
+python examples/friday_evening_lay_warmth.py   # тепло сгиба на луке к вечеру 9 октября
 python examples/friday_evening_ease_fold.py   # сгиб полоски солнца к вечеру 9 октября
 python examples/friday_afternoon_curl_fingers.py   # пальцы в полоске солнца после полудня 9 октября
 python examples/friday_afternoon_shift_stripe.py   # полоска солнца на костяшках после полудня 9 октября
@@ -189,6 +190,18 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - гудит низко после приседа на траву
 - наклоняет ухо к седлу после низкого гула
 - прижимает щеку к колену после наклона уха
+- мурлычет в седло после щеки у колена
+- тянет шею после тихого мурлыканья
+- стряхивает кленовые листья после потяжки шеи
+- разглаживает луку после кленовых листьев
+- делится яблоком после гладкой луки
+- вытирает сок с луки после яблока
+- сушит край крыла после сока
+- подгибает кончик крыла после сушки
+- закрепляет кончик крыла после подгиба
+- накрывает чешуйку после закрепления
+- прижимает ладонь после накрытия
+- поднимает ладонь после нажатия
 - ставит седло под луну
 - мягко садится перед выходными
 - проверяет седло в полдень
@@ -217,6 +230,7 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - сгибает пальцы в полоске солнца после полудня
 - разжимает сгиб полоски солнца к вечеру
 - кладёт тепло сгиба на луку к вечеру
+- гладит луку утром после тепла
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
@@ -259,109 +273,11 @@ print(dragon.press_palm("мягкое нажатие после накрытия
 print(dragon.snug_buckle("пряжка после ровного стремени"))
 print(dragon.warm_strap("подвёрнутый ремень к вечеру"))
 print(dragon.tuck_strap("конец ремня после тихой пряжки"))
-print(dragon.huff_knot("дыхание на медовый узелок к позднему дню"))
-print(dragon.tap_knot("коготь по тёплому узелку к вечеру"))
-print(dragon.listen_knot("ухо к медовому узелку утром"))
-print(dragon.shade_loops("тень крыла на петлях медового узелка после полудня"))
-print(dragon.smooth_drape("край попоны на петлях медового узелка к вечеру"))
-print(dragon.share_crumb("яблочная крошка на полоске солнца в полдень"))
-print(dragon.sweep_crumb("крошка с полоски солнца после полудня"))
-print(dragon.rest_stripe("ладонь на светлой полоске после полудня"))
-print(dragon.shift_stripe("полоска солнца на костяшках после полудня"))
-print(dragon.curl_fingers("пальцы в полоске солнца после полудня"))
-print(dragon.ease_fold("сгиб полоски солнца к вечеру"))
-print(dragon.tuck_lantern("фонарик под разглаженный край попоны к вечеру"))
-print(dragon.soft_landing())
-print(dragon.habits())
+print(dragon.pat_pommel("луку утром после тепла"))
 ```
 
-## 🎮 Интерактивный режим с выбором действий
+## Что дальше
 
-```bash
-python examples/saddle_choice_adventure.py
-```
-
-## 🎨 Dragon-Tailwind (в развитии)
-
-```python
-from dragon_tailwind import DRAGON_THEME, get_theme_css
-
-print(DRAGON_THEME["primary"])
-print(get_theme_css())
-```
-
-## 🛣️ Дорожная карта
-
-- [x] Базовая структура, память, душа, привычки
-- [x] Сохранение/загрузка, LLM, интерактив
-- [x] Полёты в седле: утренний, вечерний, рассветный пикник, звёздный, воскресный и сентябрьские
-- [x] Октябрьские полёты: 1 октября и утро 2 октября
-- [x] Мягкая посадка перед выходными (`soft_landing`, тесты)
-- [x] Полуденная проверка седла (`check_saddle`, тесты)
-- [x] Послеполётное складывание крыльев (`fold_wings`, тесты, пример 2 октября после полудня)
-- [x] Дар блестящего камушка (`share_pebble`, тесты, пятничный пример)
-- [x] Тёплый термос в седле (`pour_thermos`, тесты, пятничный пример)
-- [x] Тень крыла после полудня (`offer_shade`, тесты, пример 2 октября)
-- [x] Вечерний фонарик на седле (`light_lantern`, тесты, пример 2 октября к вечеру)
-- [x] Вечерний шёпот созвездий (`name_constellation`, тесты, пример 2 октября)
-- [x] Вечерний разворот к гнезду (`bank_home`, тесты, пример 2 октября)
-- [x] Субботняя роса на седле (`brush_dew`, тесты, пример 3 октября)
-- [x] Подпруга после росы (`cinch_girth`, тесты, пример 3 октября)
-- [x] Полуденные стремена (`adjust_stirrup`, тесты, пример 3 октября)
-- [x] Тёплые поводья после полудня (`warm_reins`, тесты, пример 3 октября)
-- [x] Облачная ягода после поводьев (`share_cloudberry`, тесты, пример 3 октября)
-- [x] Горизонт после ягоды (`point_horizon`, тесты, пример 3 октября)
-- [x] Термик после горизонта (`catch_thermal`, тесты, пример 3 октября к вечеру)
-- [x] Планирование после термика (`level_glide`, тесты, пример 3 октября к вечеру)
-- [x] Хребет после планирования (`mark_ridge`, тесты, пример 3 октября к вечеру)
-- [x] Уступ после хребта (`choose_ledge`, тесты, пример 3 октября к вечеру)
-- [x] Хвост после уступа (`coil_tail`, тесты, пример 4 октября утром)
-- [x] Морда на луке после хвоста (`rest_muzzle`, тесты, пример 4 октября к полудню)
-- [x] Медленное моргание после морды (`blink_slow`, тесты, пример 4 октября к полудню)
-- [x] Тёплый выдох после моргания (`huff_warm`, тесты, пример 4 октября после полудня)
-- [x] Короткий круг после выдоха (`circle_short`, тесты, пример 4 октября к вечеру)
-- [x] Тихий присед на траву после круга (`settle_grass`, тесты, пример 4 октября к вечеру)
-- [x] Низкий гул после приседа (`hum_low`, тесты, пример 4 октября вечером)
-- [x] Ухо к седлу после гула (`tilt_ear`, тесты, пример 4 октября вечером)
-- [x] Щека к колену после уха (`nuzzle_knee`, тесты, пример 4 октября поздним вечером)
-- [x] Тихое мурлыканье после щеки (`purr_soft`, тесты, пример 4 октября к ночи)
-- [x] Потяжка шеи после мурлыканья (`stretch_neck`, тесты, пример 5 октября утром)
-- [x] Кленовые листья после потяжки (`shake_leaves`, тесты, пример 5 октября позднее утро)
-- [x] Лука после листьев (`smooth_pommel`, тесты, пример 5 октября к полудню)
-- [x] Яблоко после луки (`share_apple`, тесты, пример 5 октября в полдень)
-- [x] Сок с луки после яблока (`wipe_juice`, тесты, пример 5 октября после полудня)
-- [x] Край крыла после сока (`dry_wing`, тесты, пример 5 октября к вечеру)
-- [x] Кончик крыла после сушки (`tuck_tip`, тесты, пример 5 октября после полудня)
-- [x] Кончик у луки после подгиба (`pin_tip`, тесты, пример 5 октября к вечеру)
-- [x] Ладонь на чешуйке после закрепления (`cover_pin`, тесты, пример 5 октября вечером)
-- [x] Мягкое нажатие после накрытия (`press_palm`, тесты, пример 5 октября вечером)
-- [x] Ладонь с чешуйки утром после нажатия (`lift_palm`, тесты, пример 6 октября утром)
-- [x] Край крыла после полуденной тени (`ease_wing`, тесты, пример 6 октября после полудня)
-- [x] Стремя после опущенного края (`settle_stirrup`, тесты, пример 6 октября после полудня)
-- [x] Пряжка после ровного стремени (`snug_buckle`, тесты, пример 6 октября после полудня)
-- [x] Конец ремня после тихой пряжки (`tuck_strap`, тесты, пример 6 октября к вечеру)
-- [x] Тёплый ремень после подворота (`warm_strap`, тесты, пример 6 октября вечером)
-- [x] Утренняя складка после тёплого ремня (`pat_fold`, тесты, пример 7 октября утром)
-- [x] Стежки на тёплой складке (`count_stitch`, тесты, пример 7 октября утром)
-- [x] Цвет нитки на стежках (`name_thread`, тесты, пример 7 октября к позднему утру)
-- [x] Конец нитки под стежками к полудню (`tuck_thread`, тесты, пример 7 октября в полдень)
-- [x] Медовый хвостик в послеполуденном свете (`glance_thread`, тесты, пример 7 октября после полудня)
-- [x] Узелок на медовом хвостике к позднему дню (`knot_thread`, тесты, пример 7 октября к позднему дню)
-- [x] Дыхание на медовый узелок к позднему дню (`huff_knot`, тесты, пример 7 октября к позднему дню)
-- [x] Послушать медовый узелок утром (`listen_knot`, тесты, пример 8 октября утром)
-- [x] Петли медового узелка к позднему утру (`count_loops`, тесты, пример 8 октября)
-- [x] Обвод петель когтем к полудню (`trace_loops`, тесты, пример 8 октября)
-- [x] Имена петель к раннему дню (`name_loops`, тесты, пример 8 октября)
-- [x] Тень крыла на названных петлях после полудня (`shade_loops`, тесты, пример 8 октября)
-- [x] Дыхание на затенённые петли к позднему дню (`warm_loops`, тесты, пример 8 октября)
-- [x] Тень крыла на названных петлях после полудня (`shade_loops`, тесты, пример 8 октября)
-- [x] Полоска солнца на сухом стекле к одиннадцати (`tilt_glass`, тесты, пример 9 октября)
-- [x] Яблочная крошка на полоске солнца в полдень (`share_crumb`, тесты, пример 9 октября)
-- [x] Крошка с полоски солнца после полудня (`sweep_crumb`, тесты, пример 9 октября)
-- [x] Ладонь на светлой полоске после полудня (`rest_stripe`, тесты, пример 9 октября)
-- [x] Пальцы в полоске солнца после полудня (`curl_fingers`, тесты, пример 9 октября)
-- [x] Сгиб полоски солнца к вечеру (`ease_fold`, тесты, пример 9 октября)
-- [x] Полоска солнца на костяшках после полудня (`shift_stripe`, тесты, пример 9 октября)
 - [ ] Полноценные компоненты Dragon-Tailwind
 - [ ] Мультимодальность
 - [ ] Графовая память и более глубокая эволюция души
@@ -373,4 +289,3 @@ MIT License — свободно используй, улучшай, летай 
 ---
 
 **Готов к полёту?** [DragonForge-AI](https://github.com/dragongrok2-cloud/DragonForge-AI) 🐉✨
-
