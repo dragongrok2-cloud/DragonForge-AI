@@ -27,6 +27,7 @@ from .rituals.lay_warmth import attach_lay_warmth as _attach_lay_warmth
 from .rituals.pat_pommel import attach_pat_pommel as _attach_pat_pommel
 from .rituals.trace_pommel import attach_trace_pommel as _attach_trace_pommel
 from .rituals.huff_pommel import attach_huff_pommel as _attach_huff_pommel
+from .rituals.stroke_pommel import attach_stroke_pommel as _attach_stroke_pommel
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -51,8 +52,9 @@ _attach_lay_warmth(Character)
 _attach_pat_pommel(Character)
 _attach_trace_pommel(Character)
 _attach_huff_pommel(Character)
+_attach_stroke_pommel(Character)
 
-__version__ = "0.1.86"
+__version__ = "0.1.88"
 __all__ = [
     "Character",
     "DragonCharacter",
