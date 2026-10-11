@@ -39,6 +39,7 @@ from .rituals.gaze_saddle import attach_gaze_saddle as _attach_gaze_saddle
 from .rituals.hum_saddle import attach_hum_saddle as _attach_hum_saddle
 from .rituals.lean_saddle import attach_lean_saddle as _attach_lean_saddle
 from .rituals.sigh_saddle import attach_sigh_saddle as _attach_sigh_saddle
+from .rituals.close_eyes_saddle import attach_close_eyes_saddle as _attach_close_eyes_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -75,8 +76,9 @@ _attach_gaze_saddle(Character)
 _attach_hum_saddle(Character)
 _attach_lean_saddle(Character)
 _attach_sigh_saddle(Character)
+_attach_close_eyes_saddle(Character)
 
-__version__ = "0.1.99"
+__version__ = "0.1.100"
 __all__ = [
     "Character",
     "DragonCharacter",
