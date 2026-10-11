@@ -35,6 +35,7 @@ from .rituals.stretch_saddle import attach_stretch_saddle as _attach_stretch_sad
 from .rituals.bask_saddle import attach_bask_saddle as _attach_bask_saddle
 from .rituals.shade_saddle import attach_shade_saddle as _attach_shade_saddle
 from .rituals.sip_saddle import attach_sip_saddle as _attach_sip_saddle
+from .rituals.gaze_saddle import attach_gaze_saddle as _attach_gaze_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -67,8 +68,9 @@ _attach_stretch_saddle(Character)
 _attach_bask_saddle(Character)
 _attach_shade_saddle(Character)
 _attach_sip_saddle(Character)
+_attach_gaze_saddle(Character)
 
-__version__ = "0.1.95"
+__version__ = "0.1.96"
 __all__ = [
     "Character",
     "DragonCharacter",
