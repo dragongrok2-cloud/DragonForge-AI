@@ -32,6 +32,7 @@ from .rituals.settle_pommel import attach_settle_pommel as _attach_settle_pommel
 from .rituals.nestle_saddle import attach_nestle_saddle as _attach_nestle_saddle
 from .rituals.drowse_saddle import attach_drowse_saddle as _attach_drowse_saddle
 from .rituals.stretch_saddle import attach_stretch_saddle as _attach_stretch_saddle
+from .rituals.bask_saddle import attach_bask_saddle as _attach_bask_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -61,8 +62,9 @@ _attach_settle_pommel(Character)
 _attach_nestle_saddle(Character)
 _attach_drowse_saddle(Character)
 _attach_stretch_saddle(Character)
+_attach_bask_saddle(Character)
 
-__version__ = "0.1.92"
+__version__ = "0.1.93"
 __all__ = [
     "Character",
     "DragonCharacter",
