@@ -43,6 +43,7 @@ from .rituals.close_eyes_saddle import attach_close_eyes_saddle as _attach_close
 from .rituals.smile_saddle import attach_smile_saddle as _attach_smile_saddle
 from .rituals.rest_chin_saddle import attach_rest_chin_saddle as _attach_rest_chin_saddle
 from .rituals.murmur_saddle import attach_murmur_saddle as _attach_murmur_saddle
+from .rituals.yawn_saddle import attach_yawn_saddle as _attach_yawn_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -83,8 +84,9 @@ _attach_close_eyes_saddle(Character)
 _attach_smile_saddle(Character)
 _attach_rest_chin_saddle(Character)
 _attach_murmur_saddle(Character)
+_attach_yawn_saddle(Character)
 
-__version__ = "0.1.103"
+__version__ = "0.1.104"
 __all__ = [
     "Character",
     "DragonCharacter",
