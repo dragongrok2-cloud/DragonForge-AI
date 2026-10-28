@@ -47,6 +47,7 @@ from .rituals.yawn_saddle import attach_yawn_saddle as _attach_yawn_saddle
 from .rituals.purr_saddle import attach_purr_saddle as _attach_purr_saddle
 from .rituals.doze_saddle import attach_doze_saddle as _attach_doze_saddle
 from .rituals.nuzzle_saddle import attach_nuzzle_saddle as _attach_nuzzle_saddle
+from .rituals.whisper_saddle import attach_whisper_saddle as _attach_whisper_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -91,8 +92,9 @@ _attach_yawn_saddle(Character)
 _attach_purr_saddle(Character)
 _attach_doze_saddle(Character)
 _attach_nuzzle_saddle(Character)
+_attach_whisper_saddle(Character)
 
-__version__ = "0.1.107"
+__version__ = "0.1.108"
 __all__ = [
     "Character",
     "DragonCharacter",
