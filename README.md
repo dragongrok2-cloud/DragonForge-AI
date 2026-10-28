@@ -15,7 +15,7 @@
 - **Сохранение / загрузка** персонажей в JSON (включая привычки)
 - **Модульная архитектура** — легко расширять
 - **Работает без LLM** из коробки + готов к подключению локальных/облачных моделей
-- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `trace_scale()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`, `tap_knot()`, `listen_knot()`, `count_loops()`, `trace_loops()`, `name_loops()`, `shade_loops()`, `warm_loops()`, `drape_loops()`, `smooth_drape()`, `tuck_lantern()`, `tilt_glass()`, `share_crumb()`, `sweep_crumb()`, `rest_stripe()`, `shift_stripe()`, `curl_fingers()`, `ease_fold()`, `lay_warmth()`, `pat_pommel()`, `nuzzle_pommel()`, `stroke_pommel()`, `settle_pommel()`, `nestle_saddle()`, `drowse_saddle()`, `stretch_saddle()`, `bask_saddle()`, `shade_saddle()`, `sip_saddle()`, `gaze_saddle()`, `hum_saddle()`, `lean_saddle()`, `sigh_saddle()`, `close_eyes_saddle()`, `smile_saddle()`, `rest_chin_saddle()`, `murmur_saddle()`, `yawn_saddle()`, `purr_saddle()`
+- **Методы** `mood()`, `describe_soul()`, `habits()`, `soft_landing()`, `check_saddle()`, `fold_wings()`, `share_pebble()`, `pour_thermos()`, `offer_shade()`, `light_lantern()`, `name_constellation()`, `bank_home()`, `brush_dew()`, `cinch_girth()`, `adjust_stirrup()`, `warm_reins()`, `share_cloudberry()`, `point_horizon()`, `catch_thermal()`, `level_glide()`, `mark_ridge()`, `choose_ledge()`, `coil_tail()`, `rest_muzzle()`, `blink_slow()`, `huff_warm()`, `circle_short()`, `settle_grass()`, `hum_low()`, `tilt_ear()`, `nuzzle_knee()`, `purr_soft()`, `stretch_neck()`, `shake_leaves()`, `smooth_pommel()`, `share_apple()`, `wipe_juice()`, `dry_wing()`, `tuck_tip()`, `pin_tip()`, `cover_pin()`, `press_palm()`, `lift_palm()`, `trace_scale()`, `blot_scale()`, `fold_cloth()`, `shade_pommel()`, `ease_wing()`, `settle_stirrup()`, `snug_buckle()`, `tuck_strap()`, `warm_strap()`, `count_stitch()`, `name_thread()`, `tuck_thread()`, `glance_thread()`, `knot_thread()`, `huff_knot()`, `tap_knot()`, `listen_knot()`, `count_loops()`, `trace_loops()`, `name_loops()`, `shade_loops()`, `warm_loops()`, `drape_loops()`, `smooth_drape()`, `tuck_lantern()`, `tilt_glass()`, `share_crumb()`, `sweep_crumb()`, `rest_stripe()`, `shift_stripe()`, `curl_fingers()`, `ease_fold()`, `lay_warmth()`, `pat_pommel()`, `nuzzle_pommel()`, `stroke_pommel()`, `settle_pommel()`, `nestle_saddle()`, `drowse_saddle()`, `stretch_saddle()`, `bask_saddle()`, `shade_saddle()`, `sip_saddle()`, `gaze_saddle()`, `hum_saddle()`, `lean_saddle()`, `sigh_saddle()`, `close_eyes_saddle()`, `smile_saddle()`, `rest_chin_saddle()`, `murmur_saddle()`, `yawn_saddle()`, `purr_saddle()`, `doze_saddle()`
 - **Интерактивный режим** — свободный чат + режим с выбором действий
 - **Dragon-Tailwind** — тёмная драконья UI-палитра (в разработке)
 - **Драконий дух** во всём 🔥
@@ -97,11 +97,12 @@ python examples/sunday_evening_rest_chin_saddle.py   # ← НОВОЕ! тихо 
 python examples/sunday_evening_murmur_saddle.py   # ← НОВОЕ! тихо бормотать в седле под тенью к вечеру 11 октября
 python examples/sunday_evening_yawn_saddle.py   # ← НОВОЕ! тихо зевать в седле под тенью к вечеру 11 октября
 python examples/sunday_evening_purr_saddle.py   # ← НОВОЕ! тихо мурлычать в седле под тенью к вечеру 11 октября
+python examples/sunday_evening_doze_saddle.py   # ← НОВОЕ! тихо дремать в седле под тенью к вечеру 11 октября
 python examples/friday_evening_lay_warmth.py   # тепло сгиба на луке к вечеру 9 октября
 # ... (остальные примеры сохранены)
 python examples/habits_demo.py
 python examples/interactive_dragon.py
-pytest tests/test_yawn_saddle.py tests/test_murmur_saddle.py tests/test_rest_chin_saddle.py tests/test_sigh_saddle.py tests/test_lean_saddle.py tests/test_hum_saddle.py tests/test_gaze_saddle.py tests/test_sip_saddle.py tests/test_shade_saddle.py tests/test_bask_saddle.py tests/test_stretch_saddle.py tests/test_drowse_saddle.py
+pytest tests/test_doze_saddle.py tests/test_yawn_saddle.py tests/test_murmur_saddle.py tests/test_rest_chin_saddle.py tests/test_sigh_saddle.py tests/test_lean_saddle.py tests/test_hum_saddle.py tests/test_gaze_saddle.py tests/test_sip_saddle.py tests/test_shade_saddle.py tests/test_bask_saddle.py tests/test_stretch_saddle.py tests/test_drowse_saddle.py
 ```
 
 ### Подключение LLM (опционально)
@@ -194,10 +195,12 @@ print(dragon.talk("Расскажи мне легенду", use_llm=True))
 - тихо бормочет в седле под тенью к вечеру
 - тихо зевает в седле под тенью к вечеру
 - тихо мурлычет в седле под тенью к вечеру
+- тихо дремлет в седле под тенью к вечеру
 
 ```python
 dragon.soul.strengthen_habit("любит почесывания за ухом", 0.1)
 dragon.soul.add_habit("всегда ждёт у окна", 0.4)
+print(dragon.doze_saddle("тихое дремание в седле под тенью к вечеру"))
 print(dragon.purr_saddle("тихое мурлыканье в седле под тенью к вечеру"))
 print(dragon.yawn_saddle("тихое зевание в седле под тенью к вечеру"))
 print(dragon.murmur_saddle("тихое бормотание в седле под тенью к вечеру"))
@@ -215,4 +218,4 @@ print(dragon.stretch_saddle("седло под утренним солнцем")
 print(dragon.drowse_saddle("седло к ночи после уюта"))
 ```
 
-Версия: 0.1.105
+Версия: 0.1.106
