@@ -53,6 +53,7 @@ from .rituals.rest_forehead_saddle import attach_rest_forehead_saddle as _attach
 from .rituals.rest_snout_saddle import attach_rest_snout_saddle as _attach_rest_snout_saddle
 from .rituals.rest_ear_saddle import attach_rest_ear_saddle as _attach_rest_ear_saddle
 from .rituals.rest_jaw_saddle import attach_rest_jaw_saddle as _attach_rest_jaw_saddle
+from .rituals.rest_neck_saddle import attach_rest_neck_saddle as _attach_rest_neck_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -103,8 +104,9 @@ _attach_rest_forehead_saddle(Character)
 _attach_rest_snout_saddle(Character)
 _attach_rest_ear_saddle(Character)
 _attach_rest_jaw_saddle(Character)
+_attach_rest_neck_saddle(Character)
 
-__version__ = "0.1.113"
+__version__ = "0.1.114"
 __all__ = [
     "Character",
     "DragonCharacter",
