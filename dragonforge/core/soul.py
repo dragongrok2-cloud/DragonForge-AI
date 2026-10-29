@@ -69,6 +69,7 @@ class Soul:
         "тихо прижимается носом к седлу под тенью к вечеру": 0.02,
         "тихо прижимается ухом к седлу под тенью к вечеру": 0.01,
         "тихо прижимается челюстью к седлу под тенью к вечеру": 0.005,
+        "тихо прижимается шеей к седлу под тенью к вечеру": 0.002,
     })
     emotional_state: Dict[str, float] = field(default_factory=lambda: {
         "joy": 0.7,
@@ -140,6 +141,7 @@ class Soul:
             "тихо прижимается носом к седлу под тенью к вечеру": ["прижмись носом", "прижмись к седлу носом", "носом к седлу", "рест снаут седло", "прижмись после лба"],
             "тихо прижимается ухом к седлу под тенью к вечеру": ["прижмись ухом", "прижмись к седлу ухом", "ухом к седлу", "рест ир седло", "прижмись после носа"],
             "тихо прижимается челюстью к седлу под тенью к вечеру": ["прижмись челюстью", "прижмись к седлу челюстью", "челюстью к седлу", "рест джо седло", "прижмись после уха"],
+            "тихо прижимается шеей к седлу под тенью к вечеру": ["прижмись шеей", "прижмись к седлу шеей", "шеей к седлу", "рест нек седло", "прижмись после челюсти"],
         }
 
         for habit_name, triggers in habit_triggers.items():
@@ -197,14 +199,5 @@ class Soul:
         lines = []
         for name, strength in sorted(self.habits.items(), key=lambda x: -x[1]):
             bar = "█" * int(strength * 10) + "░" * (10 - int(strength * 10))
-            lines.append(f"  {bar} {strength:.0%} — {name}")
-        return "Привычки дракона:\n" + "\n".join(lines)
-
-    def to_dict(self) -> Dict:
-        return {
-            "core_traits": self.core_traits,
-            "quirks": self.quirks,
-            "habits": self.habits,
-            "emotional_state": self.emotional_state,
-            "memories_influence_count": len(self.memories_influence)
-        }
+            lines.append(f"{bar} {name}: {strength:.0%}")
+        return "\n".join(lines)
