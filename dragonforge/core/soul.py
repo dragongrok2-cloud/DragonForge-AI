@@ -73,6 +73,7 @@ class Soul:
         "тихо прижимается плечом к седлу под тенью к вечеру": 0.001,
         "тихо прижимается локтем к седлу под тенью к вечеру": 0.0005,
         "тихо прижимается запястьем к седлу под тенью к вечеру": 0.00025,
+        "тихо прижимается ладонью к седлу под тенью к вечеру": 0.000125,
     })
     emotional_state: Dict[str, float] = field(default_factory=lambda: {
         "joy": 0.7,
@@ -148,6 +149,7 @@ class Soul:
             "тихо прижимается плечом к седлу под тенью к вечеру": ["прижмись плечом", "прижмись к седлу плечом", "плечом к седлу", "рест шоулдер седло", "прижмись после шеи"],
             "тихо прижимается локтем к седлу под тенью к вечеру": ["прижмись локтем", "прижмись к седлу локтем", "локтем к седлу", "рест элбоу седло", "прижмись после плеча"],
             "тихо прижимается запястьем к седлу под тенью к вечеру": ["прижмись запястьем", "прижмись к седлу запястьем", "запястьем к седлу", "рест рист седло", "прижмись после локтя"],
+            "тихо прижимается ладонью к седлу под тенью к вечеру": ["прижмись ладонью", "прижмись к седлу ладонью", "ладонью к седлу", "рест палм седло", "прижмись после запястья"],
         }
 
         for habit_name, triggers in habit_triggers.items():
@@ -172,38 +174,3 @@ class Soul:
         """Укрепить привычку (или создать новую)."""
         current = self.habits.get(name, 0.0)
         self.habits[name] = min(1.0, current + amount)
-
-    def weaken_habit(self, name: str, amount: float = 0.03) -> None:
-        """Ослабить привычку."""
-        if name in self.habits:
-            self.habits[name] = max(0.0, self.habits[name] - amount)
-            if self.habits[name] < 0.05:
-                del self.habits[name]
-
-    def get_strong_habits(self, threshold: float = 0.6) -> Dict[str, float]:
-        """Вернуть только сильные привычки."""
-        return {k: v for k, v in self.habits.items() if v >= threshold}
-
-    def add_habit(self, name: str, strength: float = 0.3) -> None:
-        """Добавить новую привычку."""
-        if name not in self.habits:
-            self.habits[name] = max(0.0, min(1.0, strength))
-
-    def describe(self) -> str:
-        """Краткое описание текущей души."""
-        traits = ", ".join([f"{k}: {v:.2f}" for k, v in self.core_traits.items()])
-        strong = self.get_strong_habits(0.55)
-        habits_str = "; ".join([f"{k} ({v:.0%})" for k, v in sorted(strong.items(), key=lambda x: -x[1])[:5]])
-        if not habits_str:
-            habits_str = "пока формируются..."
-        return f"Черты: {traits}.\nСильные привычки: {habits_str}"
-
-    def describe_habits(self) -> str:
-        """Подробное описание всех привычек."""
-        if not self.habits:
-            return "Пока никаких устойчивых привычек нет."
-        lines = []
-        for name, strength in sorted(self.habits.items(), key=lambda x: -x[1]):
-            bar = "█" * int(strength * 10) + "░" * (10 - int(strength * 10))
-            lines.append(f"{bar} {name}: {strength:.0%}")
-        return "\n".join(lines)
