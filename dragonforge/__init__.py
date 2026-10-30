@@ -63,6 +63,7 @@ from .rituals.rest_tail_saddle import attach_rest_tail_saddle as _attach_rest_ta
 from .rituals.rest_claw_saddle import attach_rest_claw_saddle as _attach_rest_claw_saddle
 from .rituals.rest_knee_saddle import attach_rest_knee_saddle as _attach_rest_knee_saddle
 from .rituals.rest_ankle_saddle import attach_rest_ankle_saddle as _attach_rest_ankle_saddle
+from .rituals.rest_hip_saddle import attach_rest_hip_saddle as _attach_rest_hip_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -123,8 +124,9 @@ _attach_rest_tail_saddle(Character)
 _attach_rest_claw_saddle(Character)
 _attach_rest_knee_saddle(Character)
 _attach_rest_ankle_saddle(Character)
+_attach_rest_hip_saddle(Character)
 
-__version__ = "0.1.123"
+__version__ = "0.1.124"
 __all__ = [
     "Character",
     "DragonCharacter",
