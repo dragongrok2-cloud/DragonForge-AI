@@ -72,6 +72,7 @@ from .rituals.rest_sole_saddle import attach_rest_sole_saddle as _attach_rest_so
 from .rituals.rest_instep_saddle import attach_rest_instep_saddle as _attach_rest_instep_saddle
 from .rituals.rest_arch_saddle import attach_rest_arch_saddle as _attach_rest_arch_saddle
 from .rituals.rest_ball_saddle import attach_rest_ball_saddle as _attach_rest_ball_saddle
+from .rituals.rest_big_toe_saddle import attach_rest_big_toe_saddle as _attach_rest_big_toe_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -141,8 +142,9 @@ _attach_rest_sole_saddle(Character)
 _attach_rest_instep_saddle(Character)
 _attach_rest_arch_saddle(Character)
 _attach_rest_ball_saddle(Character)
+_attach_rest_big_toe_saddle(Character)
 
-__version__ = "0.1.132"
+__version__ = "0.1.133"
 __all__ = [
     "Character",
     "DragonCharacter",
