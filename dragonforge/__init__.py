@@ -86,6 +86,7 @@ from .rituals.rest_wingbase_saddle import attach_rest_wingbase_saddle as _attach
 from .rituals.rest_wingjoint_saddle import attach_rest_wingjoint_saddle as _attach_rest_wingjoint_saddle
 from .rituals.rest_wingmembrane_saddle import attach_rest_wingmembrane_saddle as _attach_rest_wingmembrane_saddle
 from .rituals.rest_wingedge_saddle import attach_rest_wingedge_saddle as _attach_rest_wingedge_saddle
+from .rituals.rest_wingfold_saddle import attach_rest_wingfold_saddle as _attach_rest_wingfold_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -169,8 +170,9 @@ _attach_rest_wingbase_saddle(Character)
 _attach_rest_wingjoint_saddle(Character)
 _attach_rest_wingmembrane_saddle(Character)
 _attach_rest_wingedge_saddle(Character)
+_attach_rest_wingfold_saddle(Character)
 
-__version__ = "0.1.144"
+__version__ = "0.1.147"
 __all__ = [
     "Character",
     "DragonCharacter",
