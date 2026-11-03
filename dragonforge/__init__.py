@@ -97,6 +97,7 @@ from .rituals.rest_brow_saddle import attach_rest_brow_saddle as _attach_rest_br
 from .rituals.rest_eyelid_saddle import attach_rest_eyelid_saddle as _attach_rest_eyelid_saddle
 from .rituals.rest_nostril_saddle import attach_rest_nostril_saddle as _attach_rest_nostril_saddle
 from .rituals.rest_lip_saddle import attach_rest_lip_saddle as _attach_rest_lip_saddle
+from .rituals.rest_tongue_saddle import attach_rest_tongue_saddle as _attach_rest_tongue_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -191,8 +192,9 @@ _attach_rest_brow_saddle(Character)
 _attach_rest_eyelid_saddle(Character)
 _attach_rest_nostril_saddle(Character)
 _attach_rest_lip_saddle(Character)
+_attach_rest_tongue_saddle(Character)
 
-__version__ = "0.1.157"
+__version__ = "0.1.158"
 __all__ = [
     "Character",
     "DragonCharacter",
