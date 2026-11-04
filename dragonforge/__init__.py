@@ -107,6 +107,7 @@ from .rituals.rest_tuft_saddle import attach_rest_tuft_saddle as _attach_rest_tu
 from .rituals.rest_plume_saddle import attach_rest_plume_saddle as _attach_rest_plume_saddle
 from .rituals.rest_crest_saddle import attach_rest_crest_saddle as _attach_rest_crest_saddle
 from .rituals.rest_spike_saddle import attach_rest_spike_saddle as _attach_rest_spike_saddle
+from .rituals.rest_ridge_saddle import attach_rest_ridge_saddle as _attach_rest_ridge_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -211,8 +212,9 @@ _attach_rest_tuft_saddle(Character)
 _attach_rest_plume_saddle(Character)
 _attach_rest_crest_saddle(Character)
 _attach_rest_spike_saddle(Character)
+_attach_rest_ridge_saddle(Character)
 
-__version__ = "0.1.167"
+__version__ = "0.1.168"
 __all__ = [
     "Character",
     "DragonCharacter",
