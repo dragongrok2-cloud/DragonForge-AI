@@ -118,6 +118,7 @@ from .rituals.rest_temple_saddle import attach_rest_temple_saddle as _attach_res
 from .rituals.rest_eye_saddle import attach_rest_eye_saddle as _attach_rest_eye_saddle
 from .rituals.rest_pupil_saddle import attach_rest_pupil_saddle as _attach_rest_pupil_saddle
 from .rituals.rest_iris_saddle import attach_rest_iris_saddle as _attach_rest_iris_saddle
+from .rituals.rest_sclera_saddle import attach_rest_sclera_saddle as _attach_rest_sclera_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -233,8 +234,9 @@ _attach_rest_temple_saddle(Character)
 _attach_rest_eye_saddle(Character)
 _attach_rest_pupil_saddle(Character)
 _attach_rest_iris_saddle(Character)
+_attach_rest_sclera_saddle(Character)
 
-__version__ = "0.1.178"
+__version__ = "0.1.179"
 __all__ = [
     "Character",
     "DragonCharacter",
