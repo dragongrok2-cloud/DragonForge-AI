@@ -123,6 +123,7 @@ from .rituals.rest_cornea_saddle import attach_rest_cornea_saddle as _attach_res
 from .rituals.rest_lens_saddle import attach_rest_lens_saddle as _attach_rest_lens_saddle
 from .rituals.rest_retina_saddle import attach_rest_retina_saddle as _attach_rest_retina_saddle
 from .rituals.rest_macula_saddle import attach_rest_macula_saddle as _attach_rest_macula_saddle
+from .rituals.rest_fovea_saddle import attach_rest_fovea_saddle as _attach_rest_fovea_saddle
 
 _attach_rituals(Character)
 _attach_late(Character)
@@ -243,8 +244,9 @@ _attach_rest_cornea_saddle(Character)
 _attach_rest_lens_saddle(Character)
 _attach_rest_retina_saddle(Character)
 _attach_rest_macula_saddle(Character)
+_attach_rest_fovea_saddle(Character)
 
-__version__ = "0.1.183"
+__version__ = "0.1.184"
 __all__ = [
     "Character",
     "DragonCharacter",
